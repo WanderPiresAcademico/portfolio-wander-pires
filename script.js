@@ -1221,8 +1221,8 @@ function configurarPDF() {
   if (!btn) return;
 
   btn.addEventListener("click", () => {
-    const repoUrl = "https://github.com/Wanderpsc/portfolio-wander-pires";
-    const siteUrl = "https://wanderpsc.github.io/portfolio-wander-pires/";
+    const repoUrl = "https://github.com/WanderPiresAcademico/portfolio-wander-pires";
+    const siteUrl = "https://wanderpiresacademico.github.io/portfolio-wander-pires/";
 
     const janela = window.open("", "_blank");
     janela.document.write(`
