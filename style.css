@@ -169,7 +169,7 @@ img { max-width: 100%; display: block; }
   text-align: center;
   position: relative;
   z-index: 1;
-  padding: 6rem 1.5rem 2rem;
+  padding: 6rem 1.5rem 0;
 }
 
 .hero__conteudo {
@@ -324,7 +324,7 @@ img { max-width: 100%; display: block; }
 
 /* ===== SOBRE MIM ===== */
 .sobre {
-  padding: 2rem 0 6rem;
+  padding: 0 0 6rem;
   position: relative;
   z-index: 1;
 }
