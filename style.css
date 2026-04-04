@@ -982,21 +982,40 @@ body.modo-edicao .sobre__foto-zoom {
 }
 
 /* Botão Remover Projeto */
-.projeto-card__btn-remover {
+/* Ações do card (editar + remover) */
+.projeto-card__acoes {
   position: absolute;
   top: 0.8rem;
   right: 0.8rem;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 2;
+}
+
+.projeto-card__btn-remover,
+.projeto-card__btn-editar {
   background: none;
   border: none;
   color: rgba(255, 255, 255, 0.15);
   font-size: 1.2rem;
   cursor: pointer;
-  transition: color 0.3s;
-  z-index: 2;
+  transition: color 0.3s, background 0.3s;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .projeto-card__btn-remover:hover {
   color: var(--cor-acentuada);
+  background: rgba(255, 46, 99, 0.15);
+}
+
+.projeto-card__btn-editar:hover {
+  color: var(--cor-primaria);
+  background: rgba(0, 212, 255, 0.15);
 }
 
 /* Botão Adicionar Projeto */
@@ -1031,6 +1050,7 @@ body.modo-edicao .sobre__foto-zoom {
 .formacao-card__btn-remover,
 .formacao__btn-add,
 .projeto-card__btn-remover,
+.projeto-card__btn-editar,
 .projetos__btn-add,
 .sobre__foto-overlay,
 .sobre__btn-remover-p,
@@ -1045,8 +1065,9 @@ body.modo-edicao .sobre__foto-zoom {
 }
 
 body.modo-edicao .formacao-card__btn-remover,
-body.modo-edicao .projeto-card__btn-remover {
-  display: block !important;
+body.modo-edicao .projeto-card__btn-remover,
+body.modo-edicao .projeto-card__btn-editar {
+  display: flex !important;
 }
 
 body.modo-edicao .formacao__btn-add,

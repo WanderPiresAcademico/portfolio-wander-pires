@@ -442,7 +442,10 @@ function renderizarProjetos() {
       .join("");
 
     card.innerHTML = `
-      <button class="projeto-card__btn-remover" data-index="${i}" title="Remover">&times;</button>
+      <div class="projeto-card__acoes">
+        <button class="projeto-card__btn-editar" data-index="${i}" title="Editar">&#9998;</button>
+        <button class="projeto-card__btn-remover" data-index="${i}" title="Remover">&times;</button>
+      </div>
       <div class="projeto-card__img">${projeto.emoji.startsWith("data:image") ? '<img src="' + projeto.emoji + '" alt="Imagem do projeto" class="projeto-card__img-foto">' : projeto.emoji}</div>
       <div class="projeto-card__body">
         <h3 class="projeto-card__titulo">${projeto.titulo}</h3>
@@ -464,6 +467,16 @@ function renderizarProjetos() {
       projetos.splice(idx, 1);
       salvarDados();
       renderizarProjetos();
+    });
+  });
+
+  // Botões de editar
+  grid.querySelectorAll(".projeto-card__btn-editar").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.index, 10);
+      if (typeof abrirModalProjetoEditar === "function") {
+        abrirModalProjetoEditar(idx);
+      }
     });
   });
 }
@@ -570,12 +583,14 @@ function configurarModal() {
   });
 }
 
-// ===== MODAL DE ADICIONAR PROJETO =====
+// ===== MODAL DE ADICIONAR/EDITAR PROJETO =====
 function configurarModalProjeto() {
   const btnAdd = document.getElementById("btnAddProjeto");
   const overlay = document.getElementById("modalProjeto");
   const btnFechar = document.getElementById("modalProjetoFechar");
   const form = document.getElementById("formProjeto");
+  const modalTitulo = overlay.querySelector(".modal__titulo");
+  const btnSalvar = form.querySelector(".modal__btn-salvar");
 
   // Elementos do campo emoji/imagem
   const emojiInputArea = document.getElementById("emojiInputArea");
@@ -585,6 +600,7 @@ function configurarModalProjeto() {
   const inputEmojiImg = document.getElementById("inputEmojiImg");
 
   let emojiValor = ""; // guarda emoji texto ou data-URL da imagem
+  let editandoIndex = -1; // -1 = criando, >= 0 = editando
 
   // Atualiza o preview do campo emoji
   function atualizarEmojiPreview(valor) {
@@ -655,6 +671,9 @@ function configurarModalProjeto() {
   });
 
   function abrirModal() {
+    editandoIndex = -1;
+    modalTitulo.textContent = "Novo Projeto";
+    btnSalvar.textContent = "Salvar";
     overlay.classList.add("ativo");
   }
 
@@ -663,7 +682,33 @@ function configurarModalProjeto() {
     form.reset();
     atualizarEmojiPreview("");
     inputEmojiImg.value = "";
+    editandoIndex = -1;
   }
+
+  // Abrir modal para editar projeto existente
+  function abrirParaEditar(index) {
+    const projeto = projetos[index];
+    if (!projeto) return;
+
+    editandoIndex = index;
+    modalTitulo.textContent = "Editar Projeto";
+    btnSalvar.textContent = "Atualizar";
+
+    // Preencher campos com os dados atuais
+    atualizarEmojiPreview(projeto.emoji);
+    if (!projeto.emoji.startsWith("data:image")) {
+      campoEmoji.value = projeto.emoji;
+    }
+    document.getElementById("campoTituloProjeto").value = projeto.titulo;
+    document.getElementById("campoDescricaoProjeto").value = projeto.descricao;
+    document.getElementById("campoTecnologias").value = projeto.tecnologias.join(", ");
+    document.getElementById("campoLinkProjeto").value = projeto.link === "#" ? "" : projeto.link;
+
+    overlay.classList.add("ativo");
+  }
+
+  // Expor globalmente para o renderizarProjetos chamar
+  window.abrirModalProjetoEditar = abrirParaEditar;
 
   btnAdd.addEventListener("click", abrirModal);
   btnFechar.addEventListener("click", fecharModal);
@@ -678,7 +723,7 @@ function configurarModalProjeto() {
     // Prioridade: imagem colada > texto do campo emoji
     const emojiFinal = emojiValor || campoEmoji.value.trim() || "📂";
 
-    const novoProjeto = {
+    const dadosProjeto = {
       emoji: emojiFinal,
       titulo: document.getElementById("campoTituloProjeto").value.trim(),
       descricao: document.getElementById("campoDescricaoProjeto").value.trim(),
@@ -689,7 +734,14 @@ function configurarModalProjeto() {
       link: document.getElementById("campoLinkProjeto").value.trim() || "#",
     };
 
-    projetos.push(novoProjeto);
+    if (editandoIndex >= 0) {
+      // Editar projeto existente
+      projetos[editandoIndex] = dadosProjeto;
+    } else {
+      // Criar novo projeto
+      projetos.push(dadosProjeto);
+    }
+
     salvarDados();
     renderizarProjetos();
     fecharModal();
