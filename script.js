@@ -441,12 +441,26 @@ function renderizarProjetos() {
       .map((tech) => `<span class="tag">${tech}</span>`)
       .join("");
 
+    const imgZoom = projeto.imgZoom || 1;
+    const emojiHTML = projeto.emoji.startsWith("data:image")
+      ? `<img src="${projeto.emoji}" alt="Imagem do projeto" class="projeto-card__img-foto" style="transform: scale(${imgZoom})">`
+      : projeto.emoji;
+
+    const zoomHTML = projeto.emoji.startsWith("data:image")
+      ? `<div class="projeto-card__zoom">
+          <label>🔍</label>
+          <input type="range" class="projeto-card__zoom-range" data-index="${i}" min="0.3" max="3" step="0.05" value="${imgZoom}">
+          <span class="projeto-card__zoom-valor">${imgZoom.toFixed(1)}×</span>
+        </div>`
+      : "";
+
     card.innerHTML = `
       <div class="projeto-card__acoes">
         <button class="projeto-card__btn-editar" data-index="${i}" title="Editar">&#9998;</button>
         <button class="projeto-card__btn-remover" data-index="${i}" title="Remover">&times;</button>
       </div>
-      <div class="projeto-card__img">${projeto.emoji.startsWith("data:image") ? '<img src="' + projeto.emoji + '" alt="Imagem do projeto" class="projeto-card__img-foto">' : projeto.emoji}</div>
+      <div class="projeto-card__img">${emojiHTML}</div>
+      ${zoomHTML}
       <div class="projeto-card__body">
         <h3 class="projeto-card__titulo">${projeto.titulo}</h3>
         <p class="projeto-card__descricao">${projeto.descricao}</p>
@@ -477,6 +491,22 @@ function renderizarProjetos() {
       if (typeof abrirModalProjetoEditar === "function") {
         abrirModalProjetoEditar(idx);
       }
+    });
+  });
+
+  // Zoom das imagens dos projetos
+  grid.querySelectorAll(".projeto-card__zoom-range").forEach((range) => {
+    range.addEventListener("input", () => {
+      const idx = parseInt(range.dataset.index, 10);
+      const z = parseFloat(range.value);
+      projetos[idx].imgZoom = z;
+      // Atualizar imagem visualmente sem re-renderizar
+      const card = range.closest(".projeto-card");
+      const img = card.querySelector(".projeto-card__img-foto");
+      const label = card.querySelector(".projeto-card__zoom-valor");
+      if (img) img.style.transform = `scale(${z})`;
+      if (label) label.textContent = z.toFixed(1) + "×";
+      salvarDados();
     });
   });
 }
@@ -735,8 +765,10 @@ function configurarModalProjeto() {
     };
 
     if (editandoIndex >= 0) {
-      // Editar projeto existente
+      // Editar projeto existente — preservar imgZoom
+      const zoomAtual = projetos[editandoIndex].imgZoom;
       projetos[editandoIndex] = dadosProjeto;
+      if (zoomAtual) projetos[editandoIndex].imgZoom = zoomAtual;
     } else {
       // Criar novo projeto
       projetos.push(dadosProjeto);
@@ -806,6 +838,59 @@ function configurarMenu() {
       menuLinks.classList.remove("ativo");
     });
   });
+}
+
+// ===== SISTEMA DE ABAS =====
+function configurarAbas() {
+  const links = document.querySelectorAll(".header__tab-link");
+  const secoes = document.querySelectorAll(".secao-aba");
+  const heroBtn = document.querySelector(".hero__btn");
+
+  function ativarAba(nomeAba) {
+    // Ocultar todas as seções
+    secoes.forEach((s) => s.classList.remove("aba-ativa"));
+    links.forEach((l) => l.classList.remove("aba-ativa"));
+
+    // Mostrar a seção da aba clicada
+    const secaoAlvo = document.querySelector(`.secao-aba[data-aba="${nomeAba}"]`);
+    if (secaoAlvo) {
+      secaoAlvo.classList.add("aba-ativa");
+      // Garantir animação visível
+      secaoAlvo.classList.add("visivel");
+    }
+
+    // Marcar link ativo
+    const linkAtivo = document.querySelector(`.header__tab-link[data-aba="${nomeAba}"]`);
+    if (linkAtivo) linkAtivo.classList.add("aba-ativa");
+
+    // Scroll suave para o topo do conteúdo
+    if (secaoAlvo) {
+      secaoAlvo.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Salvar aba ativa
+    localStorage.setItem("portfolio_aba_ativa", nomeAba);
+  }
+
+  // Cliques nos links do menu
+  links.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      ativarAba(link.dataset.aba);
+    });
+  });
+
+  // Botão "Conheça-me" no hero
+  if (heroBtn) {
+    heroBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      ativarAba("sobre");
+    });
+  }
+
+  // Carregar aba salva ou abrir "sobre" por padrão
+  const abaSalva = localStorage.getItem("portfolio_aba_ativa") || "sobre";
+  ativarAba(abaSalva);
 }
 
 // ===== HEADER SCROLL EFFECT =====
@@ -1090,6 +1175,7 @@ document.addEventListener("DOMContentLoaded", () => {
   configurarDadosPessoais();
   configurarTrocaFoto();
   configurarMenu();
+  configurarAbas();
   configurarScrollHeader();
   configurarScrollReveal();
   configurarBtnTopo();

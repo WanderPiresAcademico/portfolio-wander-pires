@@ -20,11 +20,11 @@
           <span></span><span></span><span></span>
         </button>
         <ul class="header__links" id="menuLinks">
-          <li><a href="#sobre">Sobre mim</a></li>
-          <li><a href="#dados">Dados</a></li>
-          <li><a href="#formacao">Formação</a></li>
-          <li><a href="#projetos">Projetos</a></li>
-          <li><a href="#contato">Contato</a></li>
+          <li><a href="#sobre" class="header__tab-link" data-aba="sobre">Sobre mim</a></li>
+          <li><a href="#dados" class="header__tab-link" data-aba="dados">Dados</a></li>
+          <li><a href="#formacao" class="header__tab-link" data-aba="formacao">Formação</a></li>
+          <li><a href="#projetos" class="header__tab-link" data-aba="projetos">Projetos</a></li>
+          <li><a href="#contato" class="header__tab-link" data-aba="contato">Contato</a></li>
         </ul>
       </nav>
     </div>
@@ -45,7 +45,7 @@
 
   <main>
     <!-- SEÇÃO SOBRE MIM -->
-    <section id="sobre" class="sobre secao-animada">
+    <section id="sobre" class="sobre secao-animada secao-aba" data-aba="sobre">
       <div class="container">
         <h2 class="secao__titulo">Sobre mim</h2>
         <div class="sobre__conteudo">
@@ -76,7 +76,7 @@
     </section>
 
     <!-- SEÇÃO DADOS PESSOAIS -->
-    <section id="dados" class="dados secao-animada">
+    <section id="dados" class="dados secao-animada secao-aba" data-aba="dados">
       <div class="container">
         <h2 class="secao__titulo">Dados Pessoais</h2>
         <div class="dados__card">
@@ -89,7 +89,7 @@
     </section>
 
     <!-- SEÇÃO FORMAÇÃO E CURSOS -->
-    <section id="formacao" class="formacao secao-animada">
+    <section id="formacao" class="formacao secao-animada secao-aba" data-aba="formacao">
       <div class="container">
         <h2 class="secao__titulo">Formação &amp; Cursos</h2>
 
@@ -112,7 +112,7 @@
     </section>
 
     <!-- SEÇÃO MEUS PROJETOS -->
-    <section id="projetos" class="projetos secao-animada">
+    <section id="projetos" class="projetos secao-animada secao-aba" data-aba="projetos">
       <div class="container">
         <h2 class="secao__titulo">Meus Projetos</h2>
         <div class="projetos__grid" id="projetosGrid"></div>
@@ -208,7 +208,7 @@
   <button class="btn-topo" id="btnTopo" title="Voltar ao topo">&#8679;</button>
 
   <!-- RODAPÉ -->
-  <footer class="footer" id="contato">
+  <footer class="footer secao-aba" id="contato" data-aba="contato">
     <div class="container">
       <div class="footer__grid">
         <div class="footer__info">
