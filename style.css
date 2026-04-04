@@ -876,6 +876,39 @@ img { max-width: 100%; display: block; }
   color: #fff;
 }
 
+/* ===== MODO EDIÇÃO (oculto por padrão) ===== */
+.formacao-card__btn-remover,
+.formacao__btn-add,
+.projeto-card__btn-remover,
+.projetos__btn-add,
+.sobre__foto-overlay,
+#btnEditarDados {
+  display: none !important;
+}
+
+body.modo-edicao .formacao-card__btn-remover,
+body.modo-edicao .projeto-card__btn-remover {
+  display: block !important;
+}
+
+body.modo-edicao .formacao__btn-add,
+body.modo-edicao .projetos__btn-add {
+  display: flex !important;
+}
+
+body.modo-edicao .sobre__foto-overlay {
+  display: flex !important;
+  opacity: 0;
+}
+
+body.modo-edicao .sobre__foto:hover .sobre__foto-overlay {
+  opacity: 1;
+}
+
+body.modo-edicao #btnEditarDados {
+  display: inline-flex !important;
+}
+
 /* ===== BOTÃO VOLTAR AO TOPO ===== */
 .btn-topo {
   position: fixed;

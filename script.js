@@ -312,6 +312,7 @@ const camposLabels = {
 };
 
 let editandoDados = false;
+let modoEdicao = false;
 
 // ===== PERSISTÊNCIA COM LOCALSTORAGE =====
 function salvarDados() {
@@ -327,6 +328,18 @@ function carregarDados() {
   if (p) projetos = JSON.parse(p);
   if (f) formacoes = JSON.parse(f);
   if (d) dadosPessoais = JSON.parse(d);
+}
+
+// ===== MODO EDIÇÃO (Ctrl + Shift + E) =====
+function toggleModoEdicao() {
+  modoEdicao = !modoEdicao;
+  document.body.classList.toggle("modo-edicao", modoEdicao);
+  localStorage.setItem("portfolio_modo_edicao", modoEdicao);
+}
+
+function carregarModoEdicao() {
+  modoEdicao = localStorage.getItem("portfolio_modo_edicao") === "true";
+  document.body.classList.toggle("modo-edicao", modoEdicao);
 }
 
 // ===== PARTÍCULAS DE FUNDO (Canvas) =====
@@ -773,6 +786,7 @@ function configurarDadosPessoais() {
 // ===== INICIALIZAÇÃO =====
 document.addEventListener("DOMContentLoaded", () => {
   carregarDados();
+  carregarModoEdicao();
   iniciarParticulas();
   renderizarProjetos();
   renderizarFormacoes();
@@ -787,4 +801,12 @@ document.addEventListener("DOMContentLoaded", () => {
   configurarScrollReveal();
   configurarBtnTopo();
   configurarModalCodigo();
+
+  // Atalho secreto: Ctrl + Shift + E
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.shiftKey && e.key === "E") {
+      e.preventDefault();
+      toggleModoEdicao();
+    }
+  });
 });
