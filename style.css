@@ -321,14 +321,14 @@ img { max-width: 100%; display: block; }
 .sobre__foto {
   flex-shrink: 0;
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 280px;
+  height: 280px;
   cursor: pointer;
 }
 
 .sobre__foto-img {
-  width: 200px;
-  height: 200px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid transparent;
