@@ -1222,12 +1222,14 @@ function renderizarContatos() {
 
   let html = "";
   contatos.forEach((c, i) => {
-    if (c.tipo === "email") {
-      html += `<a href="mailto:${c.valor}" class="footer__contato-link">${c.valor}</a>`;
-    } else {
-      html += `<a href="${c.valor}" target="_blank" rel="noopener" class="footer__contato-link">${c.label}</a>`;
-    }
-    html += `<button class="contato__btn-remover btn-edicao" data-index="${i}" title="Remover">✕</button>`;
+    const linkHtml = c.tipo === "email"
+      ? `<a href="mailto:${encodeURI(c.valor)}" class="footer__contato-link">${c.valor}</a>`
+      : `<a href="${encodeURI(c.valor)}" target="_blank" rel="noopener" class="footer__contato-link">${c.label}</a>`;
+    html += `
+      <div class="contato-item">
+        ${linkHtml}
+        <button class="contato__btn-remover btn-edicao" data-index="${i}" title="Remover">✕</button>
+      </div>`;
   });
 
   container.innerHTML = html;

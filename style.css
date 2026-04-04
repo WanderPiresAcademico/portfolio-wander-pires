@@ -1462,6 +1462,18 @@ body.modo-edicao .dados__btn-add-campo {
   color: var(--cor-primaria);
 }
 
+/* Contato — item wrapper */
+.contato-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.contato-item a {
+  flex: 1;
+}
+
 /* Contato — botões de edição */
 .contato__acoes {
   margin-top: 0.8rem;
