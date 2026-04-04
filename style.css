@@ -1043,7 +1043,7 @@ body.modo-edicao .projeto-card__zoom {
 }
 
 .projeto-card__titulo {
-  font-size: 1.15rem;
+  font-size: 0.88rem;
   margin-bottom: 0.5rem;
   color: #fff;
   font-weight: 700;
@@ -1681,9 +1681,11 @@ body.modo-edicao .sobre__foto-salvar.visivel {
   background: #080818;
   border: 1px solid var(--borda-glass);
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 0;
   margin: 0;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .codigo__bloco code {
@@ -1694,6 +1696,55 @@ body.modo-edicao .sobre__foto-salvar.visivel {
   white-space: pre;
   display: block;
   tab-size: 2;
+}
+
+.codigo__textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  background: transparent;
+  color: var(--cor-primaria);
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: 'Courier New', Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  tab-size: 2;
+  padding: 1.5rem;
+  white-space: pre;
+}
+
+.codigo__acoes {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+  justify-content: flex-end;
+}
+
+.codigo__btn-aplicar {
+  padding: 0.5rem 1.4rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--gradiente);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+.codigo__btn-aplicar:hover {
+  opacity: 0.85;
+}
+.codigo__status {
+  color: #4caf50;
+  font-size: 0.82rem;
+  align-self: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.codigo__status.visivel {
+  opacity: 1;
 }
 
 /* ===== RESPONSIVIDADE ===== */

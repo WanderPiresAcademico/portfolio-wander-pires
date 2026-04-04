@@ -1056,13 +1056,15 @@ function configurarBtnTopo() {
   });
 }
 
-// ===== MODAL DE CÓDIGO-FONTE =====
+// ===== MODAL DE CÓDIGO-FONTE (EDITOR AO VIVO) =====
 function configurarModalCodigo() {
   const btn = document.getElementById("btnVerCodigo");
   const overlay = document.getElementById("modalCodigo");
   const btnFechar = document.getElementById("modalCodigoFechar");
   const codeEl = document.getElementById("codigoConteudo");
   const tabs = overlay.querySelectorAll(".codigo__tab");
+  const btnAplicar = document.getElementById("btnAplicarCodigo");
+  const statusEl = document.getElementById("codigoStatus");
 
   const arquivos = {
     html: "index.html",
@@ -1073,16 +1075,67 @@ function configurarModalCodigo() {
   let abaAtiva = "html";
 
   function carregarCodigo(tipo) {
-    codeEl.textContent = "Carregando...";
-    fetch(arquivos[tipo])
+    codeEl.value = "Carregando...";
+    fetch(arquivos[tipo] + "?t=" + Date.now(), { cache: "no-store" })
       .then((r) => r.text())
       .then((texto) => {
-        codeEl.textContent = texto;
+        codeEl.value = texto;
       })
       .catch(() => {
-        codeEl.textContent = "Erro ao carregar o arquivo.";
+        codeEl.value = "Erro ao carregar o arquivo.";
       });
   }
+
+  function mostrarStatus(msg, cor) {
+    statusEl.textContent = msg;
+    statusEl.style.color = cor || "#4caf50";
+    statusEl.classList.add("visivel");
+    setTimeout(() => statusEl.classList.remove("visivel"), 2500);
+  }
+
+  // Aplicar alterações ao vivo
+  btnAplicar.addEventListener("click", () => {
+    const codigo = codeEl.value;
+
+    if (abaAtiva === "css") {
+      // Aplicar CSS ao vivo
+      let dynamicStyle = document.getElementById("dynamic-css-live");
+      if (!dynamicStyle) {
+        dynamicStyle = document.createElement("style");
+        dynamicStyle.id = "dynamic-css-live";
+        document.head.appendChild(dynamicStyle);
+      }
+      dynamicStyle.textContent = codigo;
+      mostrarStatus("✔ CSS aplicado ao vivo!");
+    } else if (abaAtiva === "js") {
+      // Aplicar JS ao vivo
+      try {
+        const fn = new Function(codigo);
+        fn();
+        mostrarStatus("✔ JavaScript executado!");
+      } catch (err) {
+        mostrarStatus("✖ Erro JS: " + err.message, "#ff2e63");
+      }
+    } else if (abaAtiva === "html") {
+      // Aplicar HTML ao vivo: reescreve o documento
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(codigo, "text/html");
+        // Atualizar <main> e <footer> sem perder o header/modais
+        const novoMain = doc.querySelector("main");
+        const novoFooter = doc.querySelector("footer");
+        if (novoMain) document.querySelector("main").innerHTML = novoMain.innerHTML;
+        if (novoFooter) document.querySelector("footer").innerHTML = novoFooter.innerHTML;
+        // Re-renderizar componentes dinâmicos
+        if (typeof renderizarProjetos === "function") renderizarProjetos();
+        if (typeof renderizarFormacoes === "function") renderizarFormacoes();
+        if (typeof renderizarDados === "function") renderizarDados();
+        mostrarStatus("✔ HTML aplicado!");
+      } catch (err) {
+        mostrarStatus("✖ Erro HTML: " + err.message, "#ff2e63");
+      }
+    }
+  });
 
   btn.addEventListener("click", () => {
     overlay.classList.add("ativo");
