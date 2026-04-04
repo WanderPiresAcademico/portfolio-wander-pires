@@ -325,6 +325,13 @@ let camposLabels = {
 let editandoDados = false;
 let modoEdicao = false;
 
+// ===== CONTATOS (editáveis) =====
+let contatos = [
+  { tipo: "email", label: "E-mail", valor: "email@exemplo.com" },
+  { tipo: "link", label: "GitHub", valor: "https://github.com/wanderpires" },
+  { tipo: "link", label: "LinkedIn", valor: "https://linkedin.com/in/" },
+];
+
 // ===== PERSISTÊNCIA COM LOCALSTORAGE =====
 function salvarDados() {
   localStorage.setItem("portfolio_projetos", JSON.stringify(projetos));
@@ -333,6 +340,7 @@ function salvarDados() {
   localStorage.setItem("portfolio_campos_labels", JSON.stringify(camposLabels));
   localStorage.setItem("portfolio_sobre_paragrafos", JSON.stringify(sobreParagrafos));
   localStorage.setItem("portfolio_habilidades", JSON.stringify(habilidades));
+  localStorage.setItem("portfolio_contatos", JSON.stringify(contatos));
 }
 
 function carregarDados() {
@@ -348,6 +356,8 @@ function carregarDados() {
   if (cl) camposLabels = JSON.parse(cl);
   if (sp) sobreParagrafos = JSON.parse(sp);
   if (h) habilidades = JSON.parse(h);
+  const ct = localStorage.getItem("portfolio_contatos");
+  if (ct) contatos = JSON.parse(ct);
 }
 
 // ===== MODO EDIÇÃO (Ctrl + Shift + E) =====
@@ -787,6 +797,9 @@ function configurarTrocaFoto() {
   const fotoImg = document.getElementById("fotoPerfil");
   const zoomRange = document.getElementById("fotoZoomRange");
   const zoomValor = document.getElementById("fotoZoomValor");
+  const btnSalvar = document.getElementById("btnSalvarFoto");
+
+  let fotoAlterada = false;
 
   // Carregar foto salva
   const fotoSalva = localStorage.getItem("portfolio_foto_perfil");
@@ -811,6 +824,25 @@ function configurarTrocaFoto() {
     localStorage.setItem("portfolio_foto_zoom", z);
   });
 
+  // Redimensionar imagem para caber no localStorage
+  function redimensionarImagem(dataUrl, maxLado, callback) {
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width;
+      let h = img.height;
+      if (w > maxLado || h > maxLado) {
+        if (w > h) { h = Math.round(h * maxLado / w); w = maxLado; }
+        else       { w = Math.round(w * maxLado / h); h = maxLado; }
+      }
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      callback(canvas.toDataURL("image/jpeg", 0.8));
+    };
+    img.src = dataUrl;
+  }
+
   // Trocar foto
   btnTrocar.addEventListener("click", () => {
     inputFoto.click();
@@ -823,9 +855,26 @@ function configurarTrocaFoto() {
     const leitor = new FileReader();
     leitor.onload = (ev) => {
       fotoImg.src = ev.target.result;
-      localStorage.setItem("portfolio_foto_perfil", ev.target.result);
+      fotoAlterada = true;
+      btnSalvar.style.display = "inline-block";
     };
     leitor.readAsDataURL(arquivo);
+  });
+
+  // Botão Salvar — redimensiona e grava
+  btnSalvar.addEventListener("click", () => {
+    if (!fotoAlterada) return;
+    redimensionarImagem(fotoImg.src, 600, (dataComprimido) => {
+      try {
+        localStorage.setItem("portfolio_foto_perfil", dataComprimido);
+        fotoImg.src = dataComprimido;
+        fotoAlterada = false;
+        btnSalvar.style.display = "none";
+        alert("Foto salva com sucesso!");
+      } catch (err) {
+        alert("Erro ao salvar: a imagem pode ser muito grande. Tente uma foto menor.");
+      }
+    });
   });
 }
 
@@ -1166,6 +1215,90 @@ function renderizarHabilidades() {
   });
 }
 
+// ===== CONTATOS (FOOTER) =====
+function renderizarContatos() {
+  const container = document.getElementById("contatosContainer");
+  if (!container) return;
+
+  let html = "";
+  contatos.forEach((c, i) => {
+    if (c.tipo === "email") {
+      html += `<a href="mailto:${c.valor}" class="footer__contato-link">${c.valor}</a>`;
+    } else {
+      html += `<a href="${c.valor}" target="_blank" rel="noopener" class="footer__contato-link">${c.label}</a>`;
+    }
+    html += `<button class="contato__btn-remover btn-edicao" data-index="${i}" title="Remover">✕</button>`;
+  });
+
+  container.innerHTML = html;
+
+  container.querySelectorAll(".contato__btn-remover").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!confirm("Remover este contato?")) return;
+      contatos.splice(parseInt(btn.dataset.index, 10), 1);
+      salvarDados();
+      renderizarContatos();
+    });
+  });
+}
+
+function configurarContatos() {
+  const btnAdd = document.getElementById("btnAddContato");
+  const btnEditar = document.getElementById("btnEditarContatos");
+  const formContainer = document.getElementById("contatosEditForm");
+
+  if (!btnAdd || !btnEditar) return;
+
+  btnAdd.addEventListener("click", () => {
+    const label = prompt("Nome do contato (ex: GitHub, WhatsApp, E-mail):");
+    if (!label || !label.trim()) return;
+    const valor = prompt("Link ou endereço:");
+    if (!valor || !valor.trim()) return;
+    const tipo = label.trim().toLowerCase().includes("mail") ? "email" : "link";
+    contatos.push({ tipo, label: label.trim(), valor: valor.trim() });
+    salvarDados();
+    renderizarContatos();
+  });
+
+  btnEditar.addEventListener("click", () => {
+    if (formContainer.style.display === "block") {
+      formContainer.style.display = "none";
+      btnEditar.textContent = "✏️ Editar";
+      return;
+    }
+
+    let html = "";
+    contatos.forEach((c, i) => {
+      html += `
+        <div class="contato-edit-row">
+          <input type="text" class="contato-edit-label" data-index="${i}" value="${c.label}" placeholder="Label">
+          <input type="text" class="contato-edit-valor" data-index="${i}" value="${c.valor}" placeholder="Link / E-mail">
+          <select class="contato-edit-tipo" data-index="${i}">
+            <option value="link" ${c.tipo === "link" ? "selected" : ""}>Link</option>
+            <option value="email" ${c.tipo === "email" ? "selected" : ""}>E-mail</option>
+          </select>
+        </div>`;
+    });
+    html += `<button class="contato-edit-salvar" id="btnSalvarContatos">💾 Salvar contatos</button>`;
+    formContainer.innerHTML = html;
+    formContainer.style.display = "block";
+    btnEditar.textContent = "❌ Cancelar";
+
+    document.getElementById("btnSalvarContatos").addEventListener("click", () => {
+      formContainer.querySelectorAll(".contato-edit-row").forEach((row) => {
+        const idx = parseInt(row.querySelector(".contato-edit-label").dataset.index, 10);
+        contatos[idx].label = row.querySelector(".contato-edit-label").value.trim();
+        contatos[idx].valor = row.querySelector(".contato-edit-valor").value.trim();
+        contatos[idx].tipo = row.querySelector(".contato-edit-tipo").value;
+      });
+      salvarDados();
+      renderizarContatos();
+      formContainer.style.display = "none";
+      btnEditar.textContent = "✏️ Editar";
+    });
+  });
+}
+
 // ===== INICIALIZAÇÃO =====
 document.addEventListener("DOMContentLoaded", () => {
   carregarDados();
@@ -1182,6 +1315,8 @@ document.addEventListener("DOMContentLoaded", () => {
   configurarDadosPessoais();
   configurarTrocaFoto();
   configurarMenu();
+  configurarContatos();
+  renderizarContatos();
   configurarAbas();
   configurarScrollHeader();
   configurarScrollReveal();

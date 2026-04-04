@@ -455,6 +455,24 @@ body.modo-edicao .sobre__foto-zoom {
   text-align: center;
 }
 
+.sobre__foto-salvar {
+  margin-top: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  background: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.sobre__foto-salvar:hover {
+  background: var(--cor-accent);
+  transform: scale(1.05);
+}
+
 .sobre__texto p {
   margin-bottom: 1rem;
   font-size: 1.05rem;
@@ -1442,6 +1460,87 @@ body.modo-edicao .dados__btn-add-campo {
 
 .footer__contato a:hover {
   color: var(--cor-primaria);
+}
+
+/* Contato — botões de edição */
+.contato__acoes {
+  margin-top: 0.8rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.contato__btn-acao {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--cor-primaria);
+  background: transparent;
+  color: var(--cor-primaria);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.contato__btn-acao:hover {
+  background: var(--cor-primaria);
+  color: #fff;
+}
+
+.contato__btn-remover {
+  background: none;
+  border: none;
+  color: #f44;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-left: 0.4rem;
+  vertical-align: middle;
+}
+
+.contato__btn-remover:hover {
+  color: #ff6666;
+}
+
+/* Formulário de edição inline */
+.contato-edit-row {
+  display: flex;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.contato-edit-label,
+.contato-edit-valor {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--borda-glass);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.contato-edit-tipo {
+  padding: 0.35rem 0.4rem;
+  font-size: 0.8rem;
+  border: 1px solid var(--borda-glass);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+}
+
+.contato-edit-salvar {
+  margin-top: 0.4rem;
+  padding: 0.4rem 1rem;
+  background: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.contato-edit-salvar:hover {
+  background: var(--cor-accent);
 }
 
 .footer__bottom {
