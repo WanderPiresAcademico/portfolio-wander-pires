@@ -1434,6 +1434,29 @@ body.modo-edicao .sobre__foto-salvar.visivel {
   transform: translateY(-3px);
 }
 
+/* ===== BOTÃO PUBLICAR (modo edição) ===== */
+#btnPublicarDados {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  padding: 0.7rem 1.4rem;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #00c853, #00bfa5);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 20px rgba(0, 200, 83, 0.4);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: none;
+}
+#btnPublicarDados:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 28px rgba(0, 200, 83, 0.55);
+}
+
 /* ===== RODAPÉ ===== */
 .footer {
   background-color: rgba(10, 10, 26, 0.95);

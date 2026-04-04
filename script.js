@@ -351,21 +351,61 @@ function salvarDados() {
   localStorage.setItem("portfolio_contatos", JSON.stringify(contatos));
 }
 
-function carregarDados() {
-  const p = localStorage.getItem("portfolio_projetos");
-  const f = localStorage.getItem("portfolio_formacoes");
-  const d = localStorage.getItem("portfolio_dados");
-  const cl = localStorage.getItem("portfolio_campos_labels");
-  const sp = localStorage.getItem("portfolio_sobre_paragrafos");
-  const h = localStorage.getItem("portfolio_habilidades");
-  if (p) projetos = JSON.parse(p);
-  if (f) formacoes = JSON.parse(f);
-  if (d) dadosPessoais = JSON.parse(d);
-  if (cl) camposLabels = JSON.parse(cl);
-  if (sp) sobreParagrafos = JSON.parse(sp);
-  if (h) habilidades = JSON.parse(h);
-  const ct = localStorage.getItem("portfolio_contatos");
-  if (ct) contatos = JSON.parse(ct);
+async function carregarDados() {
+  // 1. Buscar dados.json como fonte principal (publicado no GitHub)
+  try {
+    const resp = await fetch("dados.json");
+    if (resp.ok) {
+      const dados = await resp.json();
+      if (dados.projetos) projetos = dados.projetos;
+      if (dados.formacoes) formacoes = dados.formacoes;
+      if (dados.dadosPessoais) dadosPessoais = dados.dadosPessoais;
+      if (dados.camposLabels) camposLabels = dados.camposLabels;
+      if (dados.sobreParagrafos) sobreParagrafos = dados.sobreParagrafos;
+      if (dados.habilidades) habilidades = dados.habilidades;
+      if (dados.contatos) contatos = dados.contatos;
+    }
+  } catch (e) {
+    // Se falhar, usa os defaults hardcoded do script
+  }
+
+  // 2. Em modo edição, localStorage sobrescreve (preview local)
+  if (localStorage.getItem("portfolio_modo_edicao") === "true") {
+    const p = localStorage.getItem("portfolio_projetos");
+    const f = localStorage.getItem("portfolio_formacoes");
+    const d = localStorage.getItem("portfolio_dados");
+    const cl = localStorage.getItem("portfolio_campos_labels");
+    const sp = localStorage.getItem("portfolio_sobre_paragrafos");
+    const h = localStorage.getItem("portfolio_habilidades");
+    const ct = localStorage.getItem("portfolio_contatos");
+    if (p) projetos = JSON.parse(p);
+    if (f) formacoes = JSON.parse(f);
+    if (d) dadosPessoais = JSON.parse(d);
+    if (cl) camposLabels = JSON.parse(cl);
+    if (sp) sobreParagrafos = JSON.parse(sp);
+    if (h) habilidades = JSON.parse(h);
+    if (ct) contatos = JSON.parse(ct);
+  }
+}
+
+// ===== PUBLICAR ALTERAÇÕES (baixar dados.json atualizado) =====
+function publicarDados() {
+  const dados = {
+    projetos,
+    formacoes,
+    dadosPessoais,
+    camposLabels,
+    sobreParagrafos,
+    habilidades,
+    contatos,
+  };
+  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "dados.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  alert("Arquivo dados.json baixado!\nSubstitua-o na pasta do projeto e faça push para o GitHub.");
 }
 
 // ===== MODO EDIÇÃO (Ctrl + Shift + E) =====
@@ -373,6 +413,17 @@ function toggleModoEdicao() {
   modoEdicao = !modoEdicao;
   document.body.classList.toggle("modo-edicao", modoEdicao);
   localStorage.setItem("portfolio_modo_edicao", modoEdicao);
+
+  // Botão flutuante "Publicar" (visível apenas em modo edição)
+  let btnPublicar = document.getElementById("btnPublicarDados");
+  if (!btnPublicar) {
+    btnPublicar = document.createElement("button");
+    btnPublicar.id = "btnPublicarDados";
+    btnPublicar.textContent = "🚀 Publicar Alterações";
+    btnPublicar.addEventListener("click", publicarDados);
+    document.body.appendChild(btnPublicar);
+  }
+  btnPublicar.style.display = modoEdicao ? "block" : "none";
 }
 
 function carregarModoEdicao() {
@@ -1367,8 +1418,8 @@ function configurarContatos() {
 }
 
 // ===== INICIALIZAÇÃO =====
-document.addEventListener("DOMContentLoaded", () => {
-  carregarDados();
+document.addEventListener("DOMContentLoaded", async () => {
+  await carregarDados();
   carregarModoEdicao();
   iniciarParticulas();
   renderizarProjetos();
