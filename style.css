@@ -1493,7 +1493,6 @@ body.modo-edicao .sobre__foto-salvar.visivel {
 /* Contato — botões de edição */
 .contato__acoes {
   margin-top: 0.8rem;
-  display: flex;
   gap: 0.5rem;
 }
 
