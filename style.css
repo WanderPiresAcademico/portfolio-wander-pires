@@ -169,7 +169,7 @@ img { max-width: 100%; display: block; }
   text-align: center;
   position: relative;
   z-index: 1;
-  padding: 8rem 1.5rem 4rem;
+  padding: 6rem 1.5rem 2rem;
 }
 
 .hero__conteudo {
