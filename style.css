@@ -324,7 +324,7 @@ img { max-width: 100%; display: block; }
 
 /* ===== SOBRE MIM ===== */
 .sobre {
-  padding: 6rem 0;
+  padding: 2rem 0 6rem;
   position: relative;
   z-index: 1;
 }
