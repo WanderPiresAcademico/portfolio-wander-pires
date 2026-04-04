@@ -511,11 +511,12 @@ function renderizarProjetos() {
       .join("");
 
     const imgZoom = projeto.imgZoom || 1;
-    const emojiHTML = projeto.emoji.startsWith("data:image")
+    const isImagem = projeto.emoji.startsWith("data:image") || /\.(jpg|jpeg|png|gif|webp|svg)$/i.test(projeto.emoji);
+    const emojiHTML = isImagem
       ? `<img src="${projeto.emoji}" alt="Imagem do projeto" class="projeto-card__img-foto" style="transform: scale(${imgZoom})">`
       : projeto.emoji;
 
-    const zoomHTML = projeto.emoji.startsWith("data:image")
+    const zoomHTML = isImagem
       ? `<div class="projeto-card__zoom">
           <label>🔍</label>
           <input type="range" class="projeto-card__zoom-range" data-index="${i}" min="0.3" max="3" step="0.05" value="${imgZoom}">
