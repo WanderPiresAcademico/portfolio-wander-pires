@@ -856,7 +856,7 @@ function configurarTrocaFoto() {
     leitor.onload = (ev) => {
       fotoImg.src = ev.target.result;
       fotoAlterada = true;
-      btnSalvar.style.display = "inline-block";
+      btnSalvar.classList.add("visivel");
     };
     leitor.readAsDataURL(arquivo);
   });
@@ -869,7 +869,7 @@ function configurarTrocaFoto() {
         localStorage.setItem("portfolio_foto_perfil", dataComprimido);
         fotoImg.src = dataComprimido;
         fotoAlterada = false;
-        btnSalvar.style.display = "none";
+        btnSalvar.classList.remove("visivel");
         alert("Foto salva com sucesso!");
       } catch (err) {
         alert("Erro ao salvar: a imagem pode ser muito grande. Tente uma foto menor.");

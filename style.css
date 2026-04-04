@@ -1158,7 +1158,10 @@ body.modo-edicao .projeto-card__zoom {
 .dados__btn-excluir-campo,
 .dados__btn-add-campo,
 .dados__item--add,
-#btnEditarDados {
+#btnEditarDados,
+.contato__acoes,
+.contato__btn-remover,
+.sobre__foto-salvar {
   display: none !important;
 }
 
@@ -1212,6 +1215,18 @@ body.modo-edicao .dados__item--add {
 
 body.modo-edicao .dados__btn-add-campo {
   display: inline-flex !important;
+}
+
+body.modo-edicao .contato__acoes {
+  display: flex !important;
+}
+
+body.modo-edicao .contato__btn-remover {
+  display: inline !important;
+}
+
+body.modo-edicao .sobre__foto-salvar.visivel {
+  display: inline-block !important;
 }
 
 /* ===== BOTÕES SOBRE MIM (parágrafos + habilidades) ===== */
