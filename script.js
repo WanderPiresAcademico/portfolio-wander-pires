@@ -284,6 +284,17 @@ let formacoes = [
 // ===== FILTRO ATIVO =====
 let filtroAtual = "Todos";
 
+// ===== PERFIL "SOBRE MIM" (dinâmico) =====
+let sobreParagrafos = [
+  'Olá! Meu nome é <strong>Wander Pires Silva Coelho</strong>, nasci em <strong>20 de maio de 1979</strong>, natural de <strong>São Paulo - SP</strong>. Sou educador, naturopata e estudante de programação web. Atuo como Diretor Escolar do CETI Desembargador Amaral em Curimatá-PI desde 2010 e sou professor efetivo das redes municipal e estadual de educação do Piauí.',
+  'Este portfólio foi construído com <strong>HTML5</strong>, <strong>CSS3</strong> e <strong>JavaScript</strong>, demonstrando estrutura semântica, responsividade e interatividade.',
+];
+
+let habilidades = [
+  "HTML5", "CSS3", "JavaScript", "Git & GitHub",
+  "Educação", "Gestão Escolar", "Naturopatia",
+];
+
 // ===== DADOS PESSOAIS (editáveis) =====
 let dadosPessoais = {
   nome: "Wander Pires Silva Coelho",
@@ -298,7 +309,7 @@ let dadosPessoais = {
   cargo: "Diretor Escolar – CETI Desembargador Amaral",
 };
 
-const camposLabels = {
+let camposLabels = {
   nome: "Nome Completo",
   nascimento: "Data de Nascimento",
   naturalidade: "Naturalidade",
@@ -319,15 +330,24 @@ function salvarDados() {
   localStorage.setItem("portfolio_projetos", JSON.stringify(projetos));
   localStorage.setItem("portfolio_formacoes", JSON.stringify(formacoes));
   localStorage.setItem("portfolio_dados", JSON.stringify(dadosPessoais));
+  localStorage.setItem("portfolio_campos_labels", JSON.stringify(camposLabels));
+  localStorage.setItem("portfolio_sobre_paragrafos", JSON.stringify(sobreParagrafos));
+  localStorage.setItem("portfolio_habilidades", JSON.stringify(habilidades));
 }
 
 function carregarDados() {
   const p = localStorage.getItem("portfolio_projetos");
   const f = localStorage.getItem("portfolio_formacoes");
   const d = localStorage.getItem("portfolio_dados");
+  const cl = localStorage.getItem("portfolio_campos_labels");
+  const sp = localStorage.getItem("portfolio_sobre_paragrafos");
+  const h = localStorage.getItem("portfolio_habilidades");
   if (p) projetos = JSON.parse(p);
   if (f) formacoes = JSON.parse(f);
   if (d) dadosPessoais = JSON.parse(d);
+  if (cl) camposLabels = JSON.parse(cl);
+  if (sp) sobreParagrafos = JSON.parse(sp);
+  if (h) habilidades = JSON.parse(h);
 }
 
 // ===== MODO EDIÇÃO (Ctrl + Shift + E) =====
@@ -423,7 +443,7 @@ function renderizarProjetos() {
 
     card.innerHTML = `
       <button class="projeto-card__btn-remover" data-index="${i}" title="Remover">&times;</button>
-      <div class="projeto-card__img">${projeto.emoji}</div>
+      <div class="projeto-card__img">${projeto.emoji.startsWith("data:image") ? '<img src="' + projeto.emoji + '" alt="Imagem do projeto" class="projeto-card__img-foto">' : projeto.emoji}</div>
       <div class="projeto-card__body">
         <h3 class="projeto-card__titulo">${projeto.titulo}</h3>
         <p class="projeto-card__descricao">${projeto.descricao}</p>
@@ -557,6 +577,83 @@ function configurarModalProjeto() {
   const btnFechar = document.getElementById("modalProjetoFechar");
   const form = document.getElementById("formProjeto");
 
+  // Elementos do campo emoji/imagem
+  const emojiInputArea = document.getElementById("emojiInputArea");
+  const emojiPreview = document.getElementById("emojiPreview");
+  const campoEmoji = document.getElementById("campoEmoji");
+  const btnEmojiImg = document.getElementById("btnEmojiImg");
+  const inputEmojiImg = document.getElementById("inputEmojiImg");
+
+  let emojiValor = ""; // guarda emoji texto ou data-URL da imagem
+
+  // Atualiza o preview do campo emoji
+  function atualizarEmojiPreview(valor) {
+    emojiValor = valor;
+    if (!valor) {
+      emojiPreview.innerHTML = '<span class="emoji-input__placeholder">Cole um emoji ou imagem (Ctrl+V)</span>';
+      return;
+    }
+    if (valor.startsWith("data:image")) {
+      emojiPreview.innerHTML = '<img src="' + valor + '" alt="Imagem do projeto" class="emoji-input__img">';
+      campoEmoji.value = "";
+    } else {
+      emojiPreview.innerHTML = '<span class="emoji-input__emoji">' + valor + '</span>';
+    }
+  }
+
+  // Processa um arquivo de imagem e atualiza o preview
+  function processarImagem(arquivo) {
+    if (!arquivo || !arquivo.type.startsWith("image/")) return;
+    const leitor = new FileReader();
+    leitor.onload = (ev) => atualizarEmojiPreview(ev.target.result);
+    leitor.readAsDataURL(arquivo);
+  }
+
+  // Colar imagem (Ctrl+V) na área do emoji
+  emojiInputArea.addEventListener("paste", (e) => {
+    const items = e.clipboardData && e.clipboardData.items;
+    if (!items) return;
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        e.preventDefault();
+        processarImagem(item.getAsFile());
+        return;
+      }
+    }
+  });
+
+  // Arrastar e soltar imagem
+  emojiInputArea.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    emojiInputArea.classList.add("emoji-input--drag");
+  });
+  emojiInputArea.addEventListener("dragleave", () => {
+    emojiInputArea.classList.remove("emoji-input--drag");
+  });
+  emojiInputArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    emojiInputArea.classList.remove("emoji-input--drag");
+    const arquivo = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (arquivo) processarImagem(arquivo);
+  });
+
+  // Botão para escolher imagem do disco
+  btnEmojiImg.addEventListener("click", () => inputEmojiImg.click());
+  inputEmojiImg.addEventListener("change", (e) => {
+    const arquivo = e.target.files[0];
+    if (arquivo) processarImagem(arquivo);
+  });
+
+  // Quando o usuário digita um emoji no campo texto, atualizar preview
+  campoEmoji.addEventListener("input", () => {
+    const val = campoEmoji.value.trim();
+    if (val) {
+      atualizarEmojiPreview(val);
+    } else if (!emojiValor.startsWith("data:image")) {
+      atualizarEmojiPreview("");
+    }
+  });
+
   function abrirModal() {
     overlay.classList.add("ativo");
   }
@@ -564,6 +661,8 @@ function configurarModalProjeto() {
   function fecharModal() {
     overlay.classList.remove("ativo");
     form.reset();
+    atualizarEmojiPreview("");
+    inputEmojiImg.value = "";
   }
 
   btnAdd.addEventListener("click", abrirModal);
@@ -576,8 +675,11 @@ function configurarModalProjeto() {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    // Prioridade: imagem colada > texto do campo emoji
+    const emojiFinal = emojiValor || campoEmoji.value.trim() || "📂";
+
     const novoProjeto = {
-      emoji: document.getElementById("campoEmoji").value.trim(),
+      emoji: emojiFinal,
       titulo: document.getElementById("campoTituloProjeto").value.trim(),
       descricao: document.getElementById("campoDescricaoProjeto").value.trim(),
       tecnologias: document.getElementById("campoTecnologias").value
@@ -594,12 +696,32 @@ function configurarModalProjeto() {
   });
 }
 
-// ===== TROCAR FOTO DE PERFIL =====
+// ===== TROCAR FOTO DE PERFIL + ZOOM =====
 function configurarTrocaFoto() {
   const btnTrocar = document.getElementById("btnTrocarFoto");
   const inputFoto = document.getElementById("inputFoto");
   const fotoImg = document.getElementById("fotoPerfil");
+  const zoomRange = document.getElementById("fotoZoomRange");
+  const zoomValor = document.getElementById("fotoZoomValor");
 
+  // Carregar zoom salvo
+  const zoomSalvo = localStorage.getItem("portfolio_foto_zoom");
+  if (zoomSalvo) {
+    const z = parseFloat(zoomSalvo);
+    fotoImg.style.setProperty("--foto-zoom", z);
+    zoomRange.value = z;
+    zoomValor.textContent = z.toFixed(1) + "×";
+  }
+
+  // Controle de zoom
+  zoomRange.addEventListener("input", () => {
+    const z = parseFloat(zoomRange.value);
+    fotoImg.style.setProperty("--foto-zoom", z);
+    zoomValor.textContent = z.toFixed(1) + "×";
+    localStorage.setItem("portfolio_foto_zoom", z);
+  });
+
+  // Trocar foto
   btnTrocar.addEventListener("click", () => {
     inputFoto.click();
   });
@@ -745,19 +867,60 @@ function renderizarDados() {
 
     if (editandoDados) {
       item.innerHTML = `
-        <span class="dados__label">${camposLabels[chave]}</span>
+        <div class="dados__item-header">
+          <span class="dados__label">${camposLabels[chave] || chave}</span>
+          <button class="dados__btn-excluir-campo" data-campo="${chave}" title="Excluir campo">&times;</button>
+        </div>
         <input class="dados__input" type="text" data-campo="${chave}" value="${valor}" placeholder="Preencher...">
       `;
     } else {
       const vazio = !valor;
       item.innerHTML = `
-        <span class="dados__label">${camposLabels[chave]}</span>
+        <span class="dados__label">${camposLabels[chave] || chave}</span>
         <span class="dados__valor${vazio ? " dados__valor--vazio" : ""}">${valor || "Não informado"}</span>
       `;
     }
 
     grid.appendChild(item);
   });
+
+  // Botão de adicionar novo campo (só no modo edição)
+  if (editandoDados) {
+    const btnNovo = document.createElement("div");
+    btnNovo.classList.add("dados__item", "dados__item--add");
+    btnNovo.innerHTML = `
+      <button class="dados__btn-add-campo" id="btnAddCampo" title="Adicionar campo">
+        <span>+</span> Novo Campo
+      </button>
+    `;
+    grid.appendChild(btnNovo);
+
+    // Eventos de excluir
+    grid.querySelectorAll(".dados__btn-excluir-campo").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const chave = btn.dataset.campo;
+        delete dadosPessoais[chave];
+        delete camposLabels[chave];
+        salvarDados();
+        renderizarDados();
+      });
+    });
+
+    // Evento de adicionar campo
+    document.getElementById("btnAddCampo").addEventListener("click", () => {
+      const label = prompt("Nome do novo campo (ex: LinkedIn, Hobby):");
+      if (!label || !label.trim()) return;
+      const chave = label.trim().toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "");
+      if (dadosPessoais.hasOwnProperty(chave)) {
+        alert("Já existe um campo com esse nome.");
+        return;
+      }
+      camposLabels[chave] = label.trim();
+      dadosPessoais[chave] = "";
+      salvarDados();
+      renderizarDados();
+    });
+  }
 }
 
 function configurarDadosPessoais() {
@@ -783,6 +946,82 @@ function configurarDadosPessoais() {
   });
 }
 
+// ===== PERFIL "SOBRE MIM" – PARÁGRAFOS =====
+function renderizarSobre() {
+  const container = document.getElementById("sobreParagrafosContainer");
+  container.innerHTML = "";
+
+  sobreParagrafos.forEach((texto, i) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("sobre__paragrafo-wrapper");
+    wrapper.innerHTML = `
+      <button class="sobre__btn-remover-p" data-index="${i}" title="Excluir parágrafo">&times;</button>
+      <p>${texto}</p>
+    `;
+    container.appendChild(wrapper);
+  });
+
+  // Botão adicionar parágrafo
+  const btnAdd = document.createElement("button");
+  btnAdd.classList.add("sobre__btn-add-p");
+  btnAdd.innerHTML = '<span>+</span> Parágrafo';
+  container.appendChild(btnAdd);
+
+  // Eventos
+  container.querySelectorAll(".sobre__btn-remover-p").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      sobreParagrafos.splice(parseInt(btn.dataset.index, 10), 1);
+      salvarDados();
+      renderizarSobre();
+    });
+  });
+
+  btnAdd.addEventListener("click", () => {
+    const texto = prompt("Texto do novo parágrafo:");
+    if (!texto || !texto.trim()) return;
+    sobreParagrafos.push(texto.trim());
+    salvarDados();
+    renderizarSobre();
+  });
+}
+
+// ===== PERFIL "SOBRE MIM" – HABILIDADES (TAGS) =====
+function renderizarHabilidades() {
+  const container = document.getElementById("habilidadesContainer");
+  container.innerHTML = "";
+
+  habilidades.forEach((hab, i) => {
+    const tag = document.createElement("span");
+    tag.classList.add("tag", "tag--editavel");
+    tag.innerHTML = `${hab}<button class="tag__btn-remover" data-index="${i}" title="Excluir">&times;</button>`;
+    container.appendChild(tag);
+  });
+
+  // Botão adicionar habilidade
+  const btnAdd = document.createElement("button");
+  btnAdd.classList.add("sobre__btn-add-hab");
+  btnAdd.innerHTML = '<span>+</span>';
+  btnAdd.title = "Adicionar habilidade";
+  container.appendChild(btnAdd);
+
+  // Eventos
+  container.querySelectorAll(".tag__btn-remover").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      habilidades.splice(parseInt(btn.dataset.index, 10), 1);
+      salvarDados();
+      renderizarHabilidades();
+    });
+  });
+
+  btnAdd.addEventListener("click", () => {
+    const hab = prompt("Nova habilidade:");
+    if (!hab || !hab.trim()) return;
+    habilidades.push(hab.trim());
+    salvarDados();
+    renderizarHabilidades();
+  });
+}
+
 // ===== INICIALIZAÇÃO =====
 document.addEventListener("DOMContentLoaded", () => {
   carregarDados();
@@ -791,6 +1030,8 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarProjetos();
   renderizarFormacoes();
   renderizarDados();
+  renderizarSobre();
+  renderizarHabilidades();
   configurarFiltros();
   configurarModal();
   configurarModalProjeto();

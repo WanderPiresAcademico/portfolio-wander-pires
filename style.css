@@ -318,29 +318,34 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(8px);
 }
 
-.sobre__foto {
+.sobre__foto-wrapper {
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.sobre__foto {
   position: relative;
   width: 280px;
   height: 280px;
-  cursor: pointer;
-}
-
-.sobre__foto-img {
-  width: 280px;
-  height: 280px;
   border-radius: 50%;
-  object-fit: cover;
+  overflow: hidden;
+  cursor: pointer;
   border: 3px solid transparent;
   background-image: var(--gradiente);
   background-origin: border-box;
   background-clip: content-box, border-box;
   box-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
-  transition: transform 0.4s;
 }
 
-.sobre__foto:hover .sobre__foto-img {
-  transform: scale(1.05);
+.sobre__foto-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(var(--foto-zoom, 1));
+  transition: transform 0.3s;
 }
 
 .sobre__foto-overlay {
@@ -364,6 +369,68 @@ img { max-width: 100%; display: block; }
   font-size: 0.85rem;
   font-weight: 600;
   pointer-events: none;
+}
+
+/* Controle de Zoom da Foto */
+.sobre__foto-zoom {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--borda-glass);
+  border-radius: 50px;
+  padding: 0.4rem 1rem;
+}
+
+body.modo-edicao .sobre__foto-zoom {
+  display: flex;
+}
+
+.sobre__foto-zoom-label {
+  font-size: 0.8rem;
+  color: var(--texto-medio);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sobre__foto-zoom-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100px;
+  height: 4px;
+  background: var(--borda-glass);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.sobre__foto-zoom-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gradiente);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.4);
+}
+
+.sobre__foto-zoom-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--cor-primaria);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 6px rgba(0, 212, 255, 0.4);
+}
+
+.sobre__foto-zoom-valor {
+  font-size: 0.8rem;
+  color: var(--cor-primaria);
+  font-weight: 700;
+  min-width: 2.5rem;
+  text-align: center;
 }
 
 .sobre__texto p {
@@ -739,6 +806,83 @@ img { max-width: 100%; display: block; }
   box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
 }
 
+/* ===== CAMPO EMOJI / IMAGEM ===== */
+.emoji-input {
+  border: 2px dashed var(--borda-glass);
+  border-radius: 10px;
+  padding: 0.75rem;
+  transition: border-color 0.3s, background 0.3s;
+  cursor: pointer;
+}
+
+.emoji-input:focus-within,
+.emoji-input--drag {
+  border-color: var(--cor-primaria);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.emoji-input__preview {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.emoji-input__placeholder {
+  color: var(--texto-medio);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.emoji-input__emoji {
+  font-size: 3rem;
+}
+
+.emoji-input__img {
+  max-width: 100%;
+  max-height: 120px;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.emoji-input__actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.emoji-input__text {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--borda-glass);
+  border-radius: 8px;
+  color: var(--texto-claro);
+  font-size: 0.95rem;
+  transition: border-color 0.3s;
+}
+
+.emoji-input__text:focus {
+  border-color: var(--cor-primaria);
+  outline: none;
+}
+
+.emoji-input__btn-img {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--borda-glass);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.emoji-input__btn-img:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: var(--cor-primaria);
+}
+
 /* ===== MEUS PROJETOS ===== */
 .projetos {
   padding: 6rem 0;
@@ -778,6 +922,13 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   font-size: 3.5rem;
+  overflow: hidden;
+}
+
+.projeto-card__img-foto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .projeto-card__body {
@@ -882,6 +1033,13 @@ img { max-width: 100%; display: block; }
 .projeto-card__btn-remover,
 .projetos__btn-add,
 .sobre__foto-overlay,
+.sobre__btn-remover-p,
+.sobre__btn-add-p,
+.sobre__btn-add-hab,
+.tag__btn-remover,
+.dados__btn-excluir-campo,
+.dados__btn-add-campo,
+.dados__item--add,
 #btnEditarDados {
   display: none !important;
 }
@@ -907,6 +1065,204 @@ body.modo-edicao .sobre__foto:hover .sobre__foto-overlay {
 
 body.modo-edicao #btnEditarDados {
   display: inline-flex !important;
+}
+
+body.modo-edicao .sobre__btn-remover-p {
+  display: inline-flex !important;
+}
+
+body.modo-edicao .sobre__btn-add-p {
+  display: inline-flex !important;
+}
+
+body.modo-edicao .sobre__btn-add-hab {
+  display: inline-flex !important;
+}
+
+body.modo-edicao .tag__btn-remover {
+  display: inline !important;
+}
+
+body.modo-edicao .dados__btn-excluir-campo {
+  display: inline-flex !important;
+}
+
+body.modo-edicao .dados__item--add {
+  display: flex !important;
+}
+
+body.modo-edicao .dados__btn-add-campo {
+  display: inline-flex !important;
+}
+
+/* ===== BOTÕES SOBRE MIM (parágrafos + habilidades) ===== */
+.sobre__paragrafo-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.sobre__paragrafo-wrapper p {
+  font-size: 1.05rem;
+  color: var(--texto-medio);
+}
+
+.sobre__paragrafo-wrapper p strong {
+  color: #fff;
+}
+
+.sobre__btn-remover-p {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.5rem;
+  background: rgba(255, 46, 99, 0.15);
+  border: 1px solid rgba(255, 46, 99, 0.3);
+  color: var(--cor-acentuada);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.sobre__btn-remover-p:hover {
+  background: rgba(255, 46, 99, 0.35);
+}
+
+.sobre__btn-add-p {
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1.3rem;
+  background: transparent;
+  border: 2px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 50px;
+  color: var(--cor-primaria);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.sobre__btn-add-p span {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.sobre__btn-add-p:hover {
+  background: var(--gradiente);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* Tag editável com botão remover */
+.tag--editavel {
+  position: relative;
+  padding-right: 1.6rem;
+}
+
+.tag__btn-remover {
+  position: absolute;
+  top: 50%;
+  right: 0.3rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--cor-acentuada);
+  font-size: 0.9rem;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.3s;
+}
+
+.tag__btn-remover:hover {
+  opacity: 1;
+}
+
+.sobre__btn-add-hab {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0, 212, 255, 0.3);
+  background: transparent;
+  color: var(--cor-primaria);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.sobre__btn-add-hab:hover {
+  background: var(--gradiente);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* ===== BOTÕES DADOS PESSOAIS (criar/excluir campo) ===== */
+.dados__item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.dados__btn-excluir-campo {
+  background: rgba(255, 46, 99, 0.15);
+  border: 1px solid rgba(255, 46, 99, 0.3);
+  color: var(--cor-acentuada);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.dados__btn-excluir-campo:hover {
+  background: rgba(255, 46, 99, 0.35);
+}
+
+.dados__item--add {
+  align-items: center;
+  justify-content: center;
+}
+
+.dados__btn-add-campo {
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.3rem;
+  background: transparent;
+  border: 2px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 50px;
+  color: var(--cor-primaria);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dados__btn-add-campo span {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.dados__btn-add-campo:hover {
+  background: var(--gradiente);
+  border-color: transparent;
+  color: #fff;
 }
 
 /* ===== BOTÃO VOLTAR AO TOPO ===== */
@@ -1078,7 +1434,10 @@ body.modo-edicao #btnEditarDados {
 }
 
 /* ===== RESPONSIVIDADE ===== */
+
+/* ----- Tablet (até 768px) ----- */
 @media (max-width: 768px) {
+  /* Menu */
   .header__menu-btn {
     display: flex;
   }
@@ -1118,25 +1477,67 @@ body.modo-edicao #btnEditarDados {
     position: relative;
   }
 
+  /* Hero */
   .hero__nome {
     font-size: 2.5rem;
   }
 
+  .hero__subtitulo {
+    font-size: 1rem;
+    letter-spacing: 0.5px;
+  }
+
+  /* Seções — padding reduzido */
+  .sobre,
+  .dados,
+  .formacao,
+  .projetos {
+    padding: 4rem 0;
+  }
+
+  .secao__titulo {
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Sobre */
   .sobre__conteudo {
     flex-direction: column;
     text-align: center;
     padding: 2rem;
+    gap: 2rem;
+  }
+
+  .sobre__foto {
+    width: 200px;
+    height: 200px;
   }
 
   .sobre__habilidades {
     justify-content: center;
   }
 
-  .projetos__grid,
-  .formacao__lista {
-    grid-template-columns: 1fr;
+  .sobre__foto-zoom-range {
+    width: 80px;
   }
 
+  /* Dados */
+  .dados__card {
+    padding: 1.8rem;
+  }
+
+  .dados__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .dados__btn-editar {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-bottom: 1rem;
+  }
+
+  /* Formação */
   .formacao__filtros {
     gap: 0.4rem;
   }
@@ -1146,20 +1547,277 @@ body.modo-edicao #btnEditarDados {
     padding: 0.4rem 0.9rem;
   }
 
+  .projetos__grid,
+  .formacao__lista {
+    grid-template-columns: 1fr;
+  }
+
+  /* Modal */
+  .modal {
+    padding: 1.8rem;
+    border-radius: 16px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal--codigo {
+    max-height: 90vh;
+  }
+
+  .codigo__tabs {
+    gap: 0.35rem;
+  }
+
+  .codigo__tab {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .codigo__bloco code {
+    font-size: 0.72rem;
+  }
+
+  /* Rodapé */
   .footer__grid {
     grid-template-columns: 1fr;
     text-align: center;
   }
+
+  /* Botão topo */
+  .btn-topo {
+    width: 42px;
+    height: 42px;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    font-size: 1.2rem;
+  }
 }
 
+/* ----- Celular (até 480px) ----- */
 @media (max-width: 480px) {
-  .sobre__foto,
-  .sobre__foto-img {
+  html {
+    font-size: 15px;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 0 1rem;
+  }
+
+  .hero__saudacao {
+    font-size: 0.95rem;
+    letter-spacing: 2px;
+  }
+
+  .hero__nome {
+    font-size: 2rem;
+  }
+
+  .hero__subtitulo {
+    font-size: 0.9rem;
+  }
+
+  .hero__btn {
+    padding: 0.75rem 2rem;
+    font-size: 0.9rem;
+  }
+
+  /* Seções — padding mais compacto */
+  .sobre,
+  .dados,
+  .formacao,
+  .projetos {
+    padding: 3rem 0;
+  }
+
+  .secao__titulo {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Sobre */
+  .sobre__conteudo {
+    padding: 1.5rem;
+    gap: 1.5rem;
+  }
+
+  .sobre__foto {
     width: 150px;
     height: 150px;
   }
 
-  .formacao__lista {
+  .sobre__foto-zoom-range {
+    width: 60px;
+  }
+
+  .sobre__foto-zoom-label {
+    font-size: 0.7rem;
+  }
+
+  .sobre__foto-zoom-valor {
+    font-size: 0.7rem;
+  }
+
+  .sobre__texto p {
+    font-size: 0.95rem;
+  }
+
+  .sobre__habilidades {
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+
+  /* Dados */
+  .dados__card {
+    padding: 1.2rem;
+  }
+
+  .dados__grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Formação */
+  .formacao__filtros {
+    gap: 0.3rem;
+  }
+
+  .filtro-btn {
+    font-size: 0.72rem;
+    padding: 0.35rem 0.7rem;
+  }
+
+  .formacao-card {
+    padding: 1.2rem;
+  }
+
+  .formacao-card__curso {
+    font-size: 0.95rem;
+  }
+
+  /* Projetos */
+  .projeto-card__img {
+    height: 140px;
+    font-size: 2.8rem;
+  }
+
+  .projeto-card__body {
+    padding: 1.2rem;
+  }
+
+  .projeto-card__titulo {
+    font-size: 1.05rem;
+  }
+
+  .projeto-card__descricao {
+    font-size: 0.85rem;
+  }
+
+  .projeto-card__link {
+    padding: 0.55rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal {
+    padding: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .modal__titulo {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    padding-right: 1.5rem;
+  }
+
+  .modal__form label {
+    font-size: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .modal__form input,
+  .modal__form select {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .modal__btn-salvar {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  /* Emoji input */
+  .emoji-input {
+    padding: 0.5rem;
+  }
+
+  .emoji-input__preview {
+    min-height: 60px;
+  }
+
+  .emoji-input__text {
+    font-size: 0.85rem;
+    padding: 0.45rem 0.6rem;
+  }
+
+  /* Código-fonte */
+  .modal--codigo {
+    max-height: 85vh;
+  }
+
+  .codigo__bloco {
+    padding: 1rem;
+  }
+
+  .codigo__bloco code {
+    font-size: 0.65rem;
+    line-height: 1.5;
+  }
+
+  /* Rodapé */
+  .footer {
+    padding: 2rem 0 1rem;
+  }
+
+  .footer__grid {
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer__logo {
+    font-size: 1.1rem;
+  }
+
+  .footer__btn-codigo {
+    font-size: 0.8rem;
+    padding: 0.5rem 1.4rem;
+  }
+
+  /* Botões add menores */
+  .projetos__btn-add,
+  .formacao__btn-add {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Botão topo */
+  .btn-topo {
+    width: 38px;
+    height: 38px;
+    bottom: 1rem;
+    right: 1rem;
+    font-size: 1rem;
   }
 }

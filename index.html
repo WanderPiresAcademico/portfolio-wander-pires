@@ -49,35 +49,26 @@
       <div class="container">
         <h2 class="secao__titulo">Sobre mim</h2>
         <div class="sobre__conteudo">
-          <div class="sobre__foto">
-            <img src="img/foto.jpg" alt="Foto de Wander Pires Silva Coelho" class="sobre__foto-img" id="fotoPerfil">
-            <div class="sobre__foto-overlay" id="btnTrocarFoto" title="Trocar foto">
-              <span>&#128247; Trocar</span>
+          <div class="sobre__foto-wrapper">
+            <div class="sobre__foto">
+              <img src="img/foto.jpg" alt="Foto de Wander Pires Silva Coelho" class="sobre__foto-img" id="fotoPerfil">
+              <div class="sobre__foto-overlay" id="btnTrocarFoto" title="Trocar foto">
+                <span>&#128247; Trocar</span>
+              </div>
+            </div>
+            <div class="sobre__foto-zoom" id="fotoZoomControle">
+              <label for="fotoZoomRange" class="sobre__foto-zoom-label">🔍 Zoom</label>
+              <input type="range" id="fotoZoomRange" min="1" max="3" step="0.05" value="1" class="sobre__foto-zoom-range">
+              <span class="sobre__foto-zoom-valor" id="fotoZoomValor">1×</span>
             </div>
             <input type="file" id="inputFoto" accept="image/*" hidden>
           </div>
           <div class="sobre__texto">
-            <p>
-              Olá! Meu nome é <strong>Wander Pires Silva Coelho</strong>, nasci
-              em <strong>20 de maio de 1979</strong>, natural de
-              <strong>São Paulo - SP</strong>. Sou educador, naturopata e
-              estudante de programação web. Atuo como Diretor Escolar do CETI
-              Desembargador Amaral em Curimatá-PI desde 2010 e sou professor
-              efetivo das redes municipal e estadual de educação do Piauí.
-            </p>
-            <p>
-              Este portfólio foi construído com <strong>HTML5</strong>,
-              <strong>CSS3</strong> e <strong>JavaScript</strong>, demonstrando
-              estrutura semântica, responsividade e interatividade.
-            </p>
-            <div class="sobre__habilidades">
-              <span class="tag">HTML5</span>
-              <span class="tag">CSS3</span>
-              <span class="tag">JavaScript</span>
-              <span class="tag">Git &amp; GitHub</span>
-              <span class="tag">Educação</span>
-              <span class="tag">Gestão Escolar</span>
-              <span class="tag">Naturopatia</span>
+            <div id="sobreParagrafosContainer">
+              <!-- Renderizado pelo JS -->
+            </div>
+            <div class="sobre__habilidades" id="habilidadesContainer">
+              <!-- Renderizado pelo JS -->
             </div>
           </div>
         </div>
@@ -180,8 +171,17 @@
       <h3 class="modal__titulo">Novo Projeto</h3>
       <form id="formProjeto" class="modal__form">
         <label>
-          Emoji
-          <input type="text" id="campoEmoji" placeholder="Ex: 🌐" required>
+          Emoji / Imagem
+          <div class="emoji-input" id="emojiInputArea">
+            <div class="emoji-input__preview" id="emojiPreview">
+              <span class="emoji-input__placeholder">Cole um emoji ou imagem (Ctrl+V)</span>
+            </div>
+            <div class="emoji-input__actions">
+              <input type="text" id="campoEmoji" class="emoji-input__text" placeholder="Ou digite um emoji: 🌐">
+              <button type="button" class="emoji-input__btn-img" id="btnEmojiImg" title="Escolher imagem do computador">📁</button>
+              <input type="file" id="inputEmojiImg" accept="image/*" hidden>
+            </div>
+          </div>
         </label>
         <label>
           Título
