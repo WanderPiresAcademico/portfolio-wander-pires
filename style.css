@@ -1582,6 +1582,13 @@ body.modo-edicao .sobre__foto-salvar.visivel {
   color: var(--texto-medio);
 }
 
+.footer__bottom-btns {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .footer__btn-codigo {
   display: inline-flex;
   align-items: center;

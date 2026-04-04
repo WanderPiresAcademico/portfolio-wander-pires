@@ -1215,6 +1215,58 @@ function renderizarHabilidades() {
   });
 }
 
+// ===== GERAR PDF DE ENTREGA =====
+function configurarPDF() {
+  const btn = document.getElementById("btnGerarPDF");
+  if (!btn) return;
+
+  btn.addEventListener("click", () => {
+    const repoUrl = "https://github.com/Wanderpsc/portfolio-wander-pires";
+    const siteUrl = "https://wanderpsc.github.io/portfolio-wander-pires/";
+
+    const janela = window.open("", "_blank");
+    janela.document.write(`
+      <!DOCTYPE html>
+      <html lang="pt-BR">
+      <head>
+        <meta charset="UTF-8">
+        <title>Entrega - Atividade Avaliativa 1</title>
+        <style>
+          * { margin: 0; padding: 0; box-sizing: border-box; }
+          body { font-family: 'Segoe UI', Arial, sans-serif; padding: 3rem; color: #222; }
+          h1 { font-size: 1.6rem; margin-bottom: 0.5rem; color: #1a1a2e; }
+          h2 { font-size: 1.1rem; color: #555; margin-bottom: 2rem; font-weight: 400; }
+          .info { margin-bottom: 1.5rem; }
+          .info strong { display: block; font-size: 0.95rem; color: #333; margin-bottom: 0.3rem; }
+          .info a { font-size: 1rem; color: #0066cc; word-break: break-all; }
+          hr { border: none; border-top: 1px solid #ddd; margin: 1.5rem 0; }
+          .aluno { font-size: 0.95rem; color: #555; }
+          .nota { margin-top: 2rem; font-size: 0.85rem; color: #888; }
+          @media print { body { padding: 2cm; } }
+        </style>
+      </head>
+      <body>
+        <h1>Atividade Avaliativa 1 — Programação Web</h1>
+        <h2>Portfólio Pessoal com HTML5, CSS3 e JavaScript</h2>
+        <hr>
+        <div class="info">
+          <strong>Link do Repositório:</strong>
+          <a href="${repoUrl}" target="_blank">${repoUrl}</a>
+        </div>
+        <div class="info">
+          <strong>Link do Site Publicado:</strong>
+          <a href="${siteUrl}" target="_blank">${siteUrl}</a>
+        </div>
+        <hr>
+        <p class="aluno"><strong>Aluno:</strong> Wander Pires Silva Coelho</p>
+        <p class="nota">Abra este documento e use <strong>Ctrl + P</strong> para salvar como PDF.</p>
+      </body>
+      </html>
+    `);
+    janela.document.close();
+  });
+}
+
 // ===== CONTATOS (FOOTER) =====
 function renderizarContatos() {
   const container = document.getElementById("contatosContainer");
@@ -1324,6 +1376,7 @@ document.addEventListener("DOMContentLoaded", () => {
   configurarMenu();
   configurarContatos();
   renderizarContatos();
+  configurarPDF();
   configurarAbas();
   configurarScrollHeader();
   configurarScrollReveal();
