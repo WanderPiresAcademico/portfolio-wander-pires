@@ -788,6 +788,12 @@ function configurarTrocaFoto() {
   const zoomRange = document.getElementById("fotoZoomRange");
   const zoomValor = document.getElementById("fotoZoomValor");
 
+  // Carregar foto salva
+  const fotoSalva = localStorage.getItem("portfolio_foto_perfil");
+  if (fotoSalva) {
+    fotoImg.src = fotoSalva;
+  }
+
   // Carregar zoom salvo
   const zoomSalvo = localStorage.getItem("portfolio_foto_zoom");
   if (zoomSalvo) {
@@ -817,6 +823,7 @@ function configurarTrocaFoto() {
     const leitor = new FileReader();
     leitor.onload = (ev) => {
       fotoImg.src = ev.target.result;
+      localStorage.setItem("portfolio_foto_perfil", ev.target.result);
     };
     leitor.readAsDataURL(arquivo);
   });
