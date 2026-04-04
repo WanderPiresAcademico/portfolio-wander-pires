@@ -303,8 +303,8 @@ let dadosPessoais = {
   endereco: "",
   cidade: "Curimatá - PI",
   estado: "Piauí",
-  celular: "",
-  email: "",
+  celular: "(89) 9 8139 8723",
+  email: "wanderpsc@gmail.com",
   profissao: "Educador / Naturopata / Desenvolvedor Web",
   cargo: "Diretor Escolar – CETI Desembargador Amaral",
 };
@@ -327,9 +327,8 @@ let modoEdicao = false;
 
 // ===== CONTATOS (editáveis) =====
 let contatos = [
-  { tipo: "email", label: "E-mail", valor: "email@exemplo.com" },
-  { tipo: "link", label: "GitHub", valor: "https://github.com/wanderpires" },
-  { tipo: "link", label: "LinkedIn", valor: "https://linkedin.com/in/" },
+  { tipo: "email", label: "E-mail", valor: "wanderpsc@gmail.com" },
+  { tipo: "link", label: "WhatsApp", valor: "(89) 9 8139 8723" },
 ];
 
 // ===== PERSISTÊNCIA COM LOCALSTORAGE =====
