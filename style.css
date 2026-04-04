@@ -331,6 +331,7 @@ img { max-width: 100%; display: block; }
 
 .sobre__conteudo {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 3rem;
   background: var(--bg-card);
@@ -473,6 +474,10 @@ body.modo-edicao .sobre__foto-zoom {
   transform: scale(1.05);
 }
 
+.sobre__texto {
+  text-align: center;
+}
+
 .sobre__texto p {
   margin-bottom: 1rem;
   font-size: 1.05rem;
@@ -486,6 +491,7 @@ body.modo-edicao .sobre__foto-zoom {
 .sobre__habilidades {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 0.5rem;
   margin-top: 1.2rem;
 }
