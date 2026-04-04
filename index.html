@@ -125,6 +125,10 @@
       <div class="container">
         <h2 class="secao__titulo">Meus Projetos</h2>
         <div class="projetos__grid" id="projetosGrid"></div>
+
+        <button class="projetos__btn-add" id="btnAddProjeto" title="Adicionar projeto">
+          <span>+</span> Adicionar Projeto
+        </button>
       </div>
     </section>
   </main>
@@ -163,6 +167,37 @@
         <label>
           Período
           <input type="text" id="campoPeriodo" placeholder="Ex: 2018 · 1.455 h/a">
+        </label>
+        <button type="submit" class="modal__btn-salvar">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PARA ADICIONAR PROJETO -->
+  <div class="modal-overlay" id="modalProjeto">
+    <div class="modal">
+      <button class="modal__fechar" id="modalProjetoFechar">&times;</button>
+      <h3 class="modal__titulo">Novo Projeto</h3>
+      <form id="formProjeto" class="modal__form">
+        <label>
+          Emoji
+          <input type="text" id="campoEmoji" placeholder="Ex: 🌐" maxlength="4" required>
+        </label>
+        <label>
+          Título
+          <input type="text" id="campoTituloProjeto" placeholder="Ex: Meu App" required>
+        </label>
+        <label>
+          Descrição
+          <input type="text" id="campoDescricaoProjeto" placeholder="Breve descrição do projeto" required>
+        </label>
+        <label>
+          Tecnologias (separadas por vírgula)
+          <input type="text" id="campoTecnologias" placeholder="HTML5, CSS3, JavaScript" required>
+        </label>
+        <label>
+          Link do Projeto
+          <input type="url" id="campoLinkProjeto" placeholder="https://...">
         </label>
         <button type="submit" class="modal__btn-salvar">Salvar</button>
       </form>

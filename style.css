@@ -753,6 +753,7 @@ img { max-width: 100%; display: block; }
 }
 
 .projeto-card {
+  position: relative;
   background: var(--bg-card);
   border: 1px solid var(--borda-glass);
   border-radius: 16px;
@@ -827,6 +828,52 @@ img { max-width: 100%; display: block; }
 .projeto-card__link:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 16px rgba(0, 212, 255, 0.3);
+}
+
+/* Botão Remover Projeto */
+.projeto-card__btn-remover {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.15);
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s;
+  z-index: 2;
+}
+
+.projeto-card__btn-remover:hover {
+  color: var(--cor-acentuada);
+}
+
+/* Botão Adicionar Projeto */
+.projetos__btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 2rem auto 0;
+  padding: 0.8rem 2rem;
+  background: transparent;
+  border: 2px dashed rgba(0, 212, 255, 0.3);
+  border-radius: 50px;
+  color: var(--cor-primaria);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.projetos__btn-add span {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.projetos__btn-add:hover {
+  background: var(--gradiente);
+  border-color: transparent;
+  color: #fff;
 }
 
 /* ===== BOTÃO VOLTAR AO TOPO ===== */

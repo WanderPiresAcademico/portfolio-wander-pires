@@ -381,6 +381,7 @@ function iniciarParticulas() {
 // ===== RENDERIZAÇÃO DINÂMICA DOS PROJETOS =====
 function renderizarProjetos() {
   const grid = document.getElementById("projetosGrid");
+  grid.innerHTML = "";
 
   projetos.forEach((projeto, i) => {
     const card = document.createElement("article");
@@ -392,6 +393,7 @@ function renderizarProjetos() {
       .join("");
 
     card.innerHTML = `
+      <button class="projeto-card__btn-remover" data-index="${i}" title="Remover">&times;</button>
       <div class="projeto-card__img">${projeto.emoji}</div>
       <div class="projeto-card__body">
         <h3 class="projeto-card__titulo">${projeto.titulo}</h3>
@@ -404,6 +406,15 @@ function renderizarProjetos() {
     `;
 
     grid.appendChild(card);
+  });
+
+  // Botões de remover
+  grid.querySelectorAll(".projeto-card__btn-remover").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.index, 10);
+      projetos.splice(idx, 1);
+      renderizarProjetos();
+    });
   });
 }
 
@@ -503,6 +514,49 @@ function configurarModal() {
 
     formacoes.push(novaFormacao);
     renderizarFormacoes();
+    fecharModal();
+  });
+}
+
+// ===== MODAL DE ADICIONAR PROJETO =====
+function configurarModalProjeto() {
+  const btnAdd = document.getElementById("btnAddProjeto");
+  const overlay = document.getElementById("modalProjeto");
+  const btnFechar = document.getElementById("modalProjetoFechar");
+  const form = document.getElementById("formProjeto");
+
+  function abrirModal() {
+    overlay.classList.add("ativo");
+  }
+
+  function fecharModal() {
+    overlay.classList.remove("ativo");
+    form.reset();
+  }
+
+  btnAdd.addEventListener("click", abrirModal);
+  btnFechar.addEventListener("click", fecharModal);
+
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay) fecharModal();
+  });
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const novoProjeto = {
+      emoji: document.getElementById("campoEmoji").value.trim(),
+      titulo: document.getElementById("campoTituloProjeto").value.trim(),
+      descricao: document.getElementById("campoDescricaoProjeto").value.trim(),
+      tecnologias: document.getElementById("campoTecnologias").value
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean),
+      link: document.getElementById("campoLinkProjeto").value.trim() || "#",
+    };
+
+    projetos.push(novoProjeto);
+    renderizarProjetos();
     fecharModal();
   });
 }
@@ -703,6 +757,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderizarDados();
   configurarFiltros();
   configurarModal();
+  configurarModalProjeto();
   configurarDadosPessoais();
   configurarTrocaFoto();
   configurarMenu();
