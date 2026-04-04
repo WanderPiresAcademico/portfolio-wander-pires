@@ -4,7 +4,7 @@
    ========================================================== */
 
 // ===== ARRAY DE OBJETOS COM OS PROJETOS =====
-const projetos = [
+let projetos = [
   {
     titulo: "Portfólio Pessoal",
     descricao:
@@ -40,7 +40,7 @@ const projetos = [
 ];
 
 // ===== ARRAY DE OBJETOS COM FORMAÇÕES E CURSOS (ordem cronológica) =====
-const formacoes = [
+let formacoes = [
   {
     tipo: "Ensino Médio",
     instituicao: 'Escola Estadual Dr. "Mariano da Rocha"',
@@ -285,7 +285,7 @@ const formacoes = [
 let filtroAtual = "Todos";
 
 // ===== DADOS PESSOAIS (editáveis) =====
-const dadosPessoais = {
+let dadosPessoais = {
   nome: "Wander Pires Silva Coelho",
   nascimento: "20 de maio de 1979",
   naturalidade: "São Paulo - SP",
@@ -312,6 +312,22 @@ const camposLabels = {
 };
 
 let editandoDados = false;
+
+// ===== PERSISTÊNCIA COM LOCALSTORAGE =====
+function salvarDados() {
+  localStorage.setItem("portfolio_projetos", JSON.stringify(projetos));
+  localStorage.setItem("portfolio_formacoes", JSON.stringify(formacoes));
+  localStorage.setItem("portfolio_dados", JSON.stringify(dadosPessoais));
+}
+
+function carregarDados() {
+  const p = localStorage.getItem("portfolio_projetos");
+  const f = localStorage.getItem("portfolio_formacoes");
+  const d = localStorage.getItem("portfolio_dados");
+  if (p) projetos = JSON.parse(p);
+  if (f) formacoes = JSON.parse(f);
+  if (d) dadosPessoais = JSON.parse(d);
+}
 
 // ===== PARTÍCULAS DE FUNDO (Canvas) =====
 function iniciarParticulas() {
@@ -413,6 +429,7 @@ function renderizarProjetos() {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.index, 10);
       projetos.splice(idx, 1);
+      salvarDados();
       renderizarProjetos();
     });
   });
@@ -455,6 +472,7 @@ function renderizarFormacoes() {
     btn.addEventListener("click", () => {
       const idx = parseInt(btn.dataset.index, 10);
       formacoes.splice(idx, 1);
+      salvarDados();
       renderizarFormacoes();
     });
   });
@@ -513,6 +531,7 @@ function configurarModal() {
     };
 
     formacoes.push(novaFormacao);
+    salvarDados();
     renderizarFormacoes();
     fecharModal();
   });
@@ -556,6 +575,7 @@ function configurarModalProjeto() {
     };
 
     projetos.push(novoProjeto);
+    salvarDados();
     renderizarProjetos();
     fecharModal();
   });
@@ -738,6 +758,7 @@ function configurarDadosPessoais() {
         dadosPessoais[input.dataset.campo] = input.value.trim();
       });
       editandoDados = false;
+      salvarDados();
       btn.textContent = "✎ Editar";
       btn.classList.remove("salvando");
     } else {
@@ -751,6 +772,7 @@ function configurarDadosPessoais() {
 
 // ===== INICIALIZAÇÃO =====
 document.addEventListener("DOMContentLoaded", () => {
+  carregarDados();
   iniciarParticulas();
   renderizarProjetos();
   renderizarFormacoes();
