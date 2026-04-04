@@ -1222,9 +1222,14 @@ function renderizarContatos() {
 
   let html = "";
   contatos.forEach((c, i) => {
-    const linkHtml = c.tipo === "email"
-      ? `<a href="mailto:${encodeURI(c.valor)}" class="footer__contato-link">${c.valor}</a>`
-      : `<a href="${encodeURI(c.valor)}" target="_blank" rel="noopener" class="footer__contato-link">${c.label}</a>`;
+    let linkHtml;
+    if (c.tipo === "email") {
+      linkHtml = `<a href="mailto:${encodeURI(c.valor)}" class="footer__contato-link">${c.valor}</a>`;
+    } else {
+      const display = c.valor.startsWith("http") ? c.label : `${c.label}: ${c.valor}`;
+      const href = c.valor.startsWith("http") ? encodeURI(c.valor) : "#";
+      linkHtml = `<a href="${href}" target="_blank" rel="noopener" class="footer__contato-link">${display}</a>`;
+    }
     html += `
       <div class="contato-item">
         ${linkHtml}

@@ -1471,6 +1471,7 @@ body.modo-edicao .dados__btn-add-campo {
 }
 
 .contato-item a {
+  display: inline;
   flex: 1;
 }
 
