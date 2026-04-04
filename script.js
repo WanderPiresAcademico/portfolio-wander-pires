@@ -14,28 +14,40 @@ let projetos = [
     emoji: "🌐",
   },
   {
-    titulo: "Calculadora Web",
+    emoji: "img/projeto-1.jpg",
+    titulo: "Gerenciador de Bibliotecas",
     descricao:
-      "Calculadora funcional construída com JavaScript, aplicando lógica de programação e manipulação do DOM.",
-    tecnologias: ["HTML5", "CSS3", "JavaScript"],
-    link: "#",
-    emoji: "🧮",
+      "Controle Escolar Inteligente - Gerenciamento de Biblioteca",
+    tecnologias: ["Construído com Tecnologia React 19 - Material UI - Supabase - Express.js - MercadoPago SDK - ZXing / html5-qrcode - Hospedagem via GitHub Pages e no Surge - JavaScript - Node.js/Express."],
+    link: "https://cei-sistema-biblioteca.surge.sh",
+    imgZoom: 0.3,
   },
   {
-    titulo: "Lista de Tarefas",
+    emoji: "img/projeto-2.jpg",
+    titulo: "EduSync-PRO - Sistema Criador de Horário de Aula Escolar",
     descricao:
-      "Aplicação To-Do List com funcionalidades de adicionar, remover e marcar tarefas como concluídas.",
-    tecnologias: ["HTML5", "CSS3", "JavaScript"],
-    link: "#",
-    emoji: "✅",
+      "EduSync-PRO é um Sistema Criador de Horário de Aula Escolar profissional, acompanhado de gerador de horário emergencial, frequência de professores, calendário escolar, painel eletrônico, comunicação ao vivo com envio de mensagens e muitos relatórios.",
+    tecnologias: ["Construído com Tecnologia React 19 - Material UI - Supabase - Express.js - MercadoPago SDK - ZXing / html5-qrcode - Hospedagem via GitHub Pages e no Surge - JavaScript - Node.js/Express."],
+    link: "https://criador-horario-aula.surge.sh/#/login",
+    imgZoom: 0.3,
   },
   {
-    titulo: "Landing Page",
+    emoji: "img/projeto-3.jpg",
+    titulo: "Anamnese Integrativa",
     descricao:
-      "Página de apresentação para produto fictício, com design moderno e totalmente responsivo usando Flexbox e Grid.",
-    tecnologias: ["HTML5", "CSS3"],
-    link: "#",
-    emoji: "🚀",
+      "Anamnese Integrativa é um sistema completo de apoio ao terapêuta, fornecedo-lhe segurança às indicações  suplementares e fitoterápicas, acompanhamento nas análises e anamnese e tratamentos terapêuticos a interagentes..",
+    tecnologias: ["Construído com Tecnologia React 19 - Material UI - Supabase - Express.js - MercadoPago SDK - ZXing / html5-qrcode - Hospedagem via GitHub Pages e no Surge - JavaScript - Node.js/Express."],
+    link: "https://anamneseintegrativa.surge.sh/",
+    imgZoom: 0.3,
+  },
+  {
+    emoji: "img/projeto-4.jpg",
+    titulo: "Gerador de Certificados",
+    descricao:
+      "O Sistema Gerador de Certificados é um facilitador para o trabalho da gestão escolar por gerar Certificados totalmente editáveis em massa, acompanhado pelo Hist´rorico Escolar do Estudante., tendo como modelos primários os Certificados e Hstóricos da Rede Estadual da Educação do Estado Piauí.",
+    tecnologias: ["Construído com Tecnologia React 19 - Material UI - Supabase - Express.js - MercadoPago SDK - ZXing / html5-qrcode - Hospedagem via GitHub Pages e no Surge - JavaScript - Node.js/Express."],
+    link: "https://gerador-certificados.surge.sh/login.html",
+    imgZoom: 0.3,
   },
 ];
 
@@ -290,23 +302,20 @@ let sobreParagrafos = [
   'Este portfólio foi construído com <strong>HTML5</strong>, <strong>CSS3</strong> e <strong>JavaScript</strong>, demonstrando estrutura semântica, responsividade e interatividade.',
 ];
 
-let habilidades = [
-  "HTML5", "CSS3", "JavaScript", "Git & GitHub",
-  "Educação", "Gestão Escolar", "Naturopatia",
-];
+let habilidades = [];
 
 // ===== DADOS PESSOAIS (editáveis) =====
 let dadosPessoais = {
   nome: "Wander Pires Silva Coelho",
   nascimento: "20 de maio de 1979",
   naturalidade: "São Paulo - SP",
-  endereco: "",
-  cidade: "Curimatá - PI",
+  endereco: "Av. Valdecir Rodrigues de Albuquerque",
+  cidade: "Curimatá",
   estado: "Piauí",
   celular: "(89) 9 8139 8723",
   email: "wanderpsc@gmail.com",
   profissao: "Educador / Naturopata / Desenvolvedor Web",
-  cargo: "Diretor Escolar – CETI Desembargador Amaral",
+  cargo: "Diretor Escolar – C.E.T.I. Desembargador Amaral",
 };
 
 let camposLabels = {
