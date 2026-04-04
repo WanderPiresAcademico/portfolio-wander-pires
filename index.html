@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfólio - Wander Pires Silva Coelho</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PARTÍCULAS DE FUNDO -->
+  <canvas id="particulas"></canvas>
+
+  <!-- CABEÇALHO COM MENU DE NAVEGAÇÃO -->
+  <header class="header" id="header">
+    <div class="header__container">
+      <a href="#" class="header__logo">&lt;WP /&gt;</a>
+      <nav class="header__nav">
+        <button class="header__menu-btn" id="menuBtn" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+        <ul class="header__links" id="menuLinks">
+          <li><a href="#sobre">Sobre mim</a></li>
+          <li><a href="#dados">Dados</a></li>
+          <li><a href="#formacao">Formação</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="hero__conteudo">
+      <p class="hero__saudacao">Olá, eu sou</p>
+      <h1 class="hero__nome">Wander Pires<span class="hero__cursor">|</span></h1>
+      <p class="hero__subtitulo">Educador &bull; Naturopata &bull; Desenvolvedor Web</p>
+      <a href="#sobre" class="hero__btn">Conheça-me</a>
+    </div>
+    <div class="hero__scroll-indicator">
+      <span></span>
+    </div>
+  </section>
+
+  <main>
+    <!-- SEÇÃO SOBRE MIM -->
+    <section id="sobre" class="sobre secao-animada">
+      <div class="container">
+        <h2 class="secao__titulo">Sobre mim</h2>
+        <div class="sobre__conteudo">
+          <div class="sobre__foto">
+            <img src="img/foto.jpg" alt="Foto de Wander Pires Silva Coelho" class="sobre__foto-img" id="fotoPerfil">
+            <div class="sobre__foto-overlay" id="btnTrocarFoto" title="Trocar foto">
+              <span>&#128247; Trocar</span>
+            </div>
+            <input type="file" id="inputFoto" accept="image/*" hidden>
+          </div>
+          <div class="sobre__texto">
+            <p>
+              Olá! Meu nome é <strong>Wander Pires Silva Coelho</strong>, nasci
+              em <strong>20 de maio de 1979</strong>, natural de
+              <strong>São Paulo - SP</strong>. Sou educador, naturopata e
+              estudante de programação web. Atuo como Diretor Escolar do CETI
+              Desembargador Amaral em Curimatá-PI desde 2010 e sou professor
+              efetivo das redes municipal e estadual de educação do Piauí.
+            </p>
+            <p>
+              Este portfólio foi construído com <strong>HTML5</strong>,
+              <strong>CSS3</strong> e <strong>JavaScript</strong>, demonstrando
+              estrutura semântica, responsividade e interatividade.
+            </p>
+            <div class="sobre__habilidades">
+              <span class="tag">HTML5</span>
+              <span class="tag">CSS3</span>
+              <span class="tag">JavaScript</span>
+              <span class="tag">Git &amp; GitHub</span>
+              <span class="tag">Educação</span>
+              <span class="tag">Gestão Escolar</span>
+              <span class="tag">Naturopatia</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO DADOS PESSOAIS -->
+    <section id="dados" class="dados secao-animada">
+      <div class="container">
+        <h2 class="secao__titulo">Dados Pessoais</h2>
+        <div class="dados__card">
+          <button class="dados__btn-editar" id="btnEditarDados" title="Editar dados">&#9998; Editar</button>
+          <div class="dados__grid" id="dadosGrid">
+            <!-- Renderizado pelo JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO FORMAÇÃO E CURSOS -->
+    <section id="formacao" class="formacao secao-animada">
+      <div class="container">
+        <h2 class="secao__titulo">Formação &amp; Cursos</h2>
+
+        <!-- FILTROS -->
+        <div class="formacao__filtros" id="filtrosFormacao">
+          <button class="filtro-btn ativo" data-filtro="Todos">Todos</button>
+          <button class="filtro-btn" data-filtro="Graduação">Graduação</button>
+          <button class="filtro-btn" data-filtro="Pós-Graduação">Pós-Graduação</button>
+          <button class="filtro-btn" data-filtro="Curso Técnico">Técnico</button>
+          <button class="filtro-btn" data-filtro="Curso Livre">Cursos Livres</button>
+          <button class="filtro-btn" data-filtro="Experiência Profissional">Experiência</button>
+        </div>
+
+        <div class="formacao__lista" id="formacaoLista"></div>
+
+        <button class="formacao__btn-add" id="btnAddFormacao" title="Adicionar formação ou curso">
+          <span>+</span> Adicionar
+        </button>
+      </div>
+    </section>
+
+    <!-- SEÇÃO MEUS PROJETOS -->
+    <section id="projetos" class="projetos secao-animada">
+      <div class="container">
+        <h2 class="secao__titulo">Meus Projetos</h2>
+        <div class="projetos__grid" id="projetosGrid"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL PARA ADICIONAR FORMAÇÃO -->
+  <div class="modal-overlay" id="modalFormacao">
+    <div class="modal">
+      <button class="modal__fechar" id="modalFechar">&times;</button>
+      <h3 class="modal__titulo">Nova Formação / Curso</h3>
+      <form id="formFormacao" class="modal__form">
+        <label>
+          Tipo
+          <select id="campoTipo" required>
+            <option value="">Selecione...</option>
+            <option value="Ensino Fundamental">Ensino Fundamental</option>
+            <option value="Ensino Médio">Ensino Médio</option>
+            <option value="Graduação">Graduação</option>
+            <option value="Pós-Graduação">Pós-Graduação</option>
+            <option value="Curso Técnico">Curso Técnico</option>
+            <option value="Curso Livre">Curso Livre</option>
+            <option value="Experiência Profissional">Experiência Profissional</option>
+          </select>
+        </label>
+        <label>
+          Instituição
+          <input type="text" id="campoInstituicao" placeholder='Ex: Universidade Estadual do Piauí' required>
+        </label>
+        <label>
+          Curso / Descrição
+          <input type="text" id="campoCurso" placeholder="Ex: Licenciatura em Pedagogia" required>
+        </label>
+        <label>
+          Local
+          <input type="text" id="campoLocal" placeholder="Ex: Teresina - PI">
+        </label>
+        <label>
+          Período
+          <input type="text" id="campoPeriodo" placeholder="Ex: 2018 · 1.455 h/a">
+        </label>
+        <button type="submit" class="modal__btn-salvar">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- BOTÃO VOLTAR AO TOPO -->
+  <button class="btn-topo" id="btnTopo" title="Voltar ao topo">&#8679;</button>
+
+  <!-- RODAPÉ -->
+  <footer class="footer" id="contato">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__info">
+          <h3 class="footer__logo">&lt;WP /&gt;</h3>
+          <p>Educador, Naturopata e Desenvolvedor Web.</p>
+        </div>
+        <div class="footer__contato">
+          <h4>Contato</h4>
+          <a href="mailto:email@exemplo.com">email@exemplo.com</a>
+          <a href="https://github.com/wanderpires" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://linkedin.com/in/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p>&copy; 2026 Wander Pires Silva Coelho &mdash; Todos os direitos reservados.</p>
+        <button class="footer__btn-codigo" id="btnVerCodigo">&lt;/&gt; Ver Código-Fonte</button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL CÓDIGO-FONTE -->
+  <div class="modal-overlay" id="modalCodigo">
+    <div class="modal modal--codigo">
+      <button class="modal__fechar" id="modalCodigoFechar">&times;</button>
+      <h3 class="modal__titulo">&lt;/&gt; Código-Fonte do Portfólio</h3>
+      <div class="codigo__tabs">
+        <button class="codigo__tab ativo" data-arquivo="html">index.html</button>
+        <button class="codigo__tab" data-arquivo="css">style.css</button>
+        <button class="codigo__tab" data-arquivo="js">script.js</button>
+      </div>
+      <pre class="codigo__bloco"><code id="codigoConteudo">Carregando...</code></pre>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
