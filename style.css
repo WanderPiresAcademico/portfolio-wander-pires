@@ -185,7 +185,7 @@ img { max-width: 100%; display: block; }
 }
 
 .hero__nome {
-  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-size: clamp(2rem, 5vw, 3.5rem);
   font-weight: 800;
   background: var(--gradiente);
   -webkit-background-clip: text;
@@ -1157,6 +1157,7 @@ body.modo-edicao .projeto-card__zoom {
 .projeto-card__btn-editar,
 .projetos__btn-add,
 .sobre__foto-overlay,
+.sobre__btn-editar-p,
 .sobre__btn-remover-p,
 .sobre__btn-add-p,
 .sobre__btn-add-hab,
@@ -1192,6 +1193,10 @@ body.modo-edicao .sobre__foto:hover .sobre__foto-overlay {
 }
 
 body.modo-edicao #btnEditarDados {
+  display: inline-flex !important;
+}
+
+body.modo-edicao .sobre__btn-editar-p {
   display: inline-flex !important;
 }
 
@@ -1239,6 +1244,34 @@ body.modo-edicao .sobre__foto-salvar.visivel {
 .sobre__paragrafo-wrapper {
   position: relative;
   margin-bottom: 1rem;
+}
+
+.sobre__paragrafo-acoes {
+  position: absolute;
+  top: -0.2rem;
+  right: -0.5rem;
+  display: flex;
+  gap: 0.3rem;
+}
+
+.sobre__btn-editar-p {
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  color: var(--cor-primaria);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.sobre__btn-editar-p:hover {
+  background: rgba(0, 212, 255, 0.35);
 }
 
 .sobre__paragrafo-wrapper p {
@@ -1793,7 +1826,7 @@ body.modo-edicao .sobre__foto-salvar.visivel {
 
   /* Hero */
   .hero__nome {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .hero__subtitulo {
@@ -1919,7 +1952,7 @@ body.modo-edicao .sobre__foto-salvar.visivel {
 
   /* Hero */
   .hero {
-    padding: 0 1rem;
+    padding: 5rem 1rem 0;
   }
 
   .hero__saudacao {
@@ -1928,7 +1961,7 @@ body.modo-edicao .sobre__foto-salvar.visivel {
   }
 
   .hero__nome {
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
 
   .hero__subtitulo {

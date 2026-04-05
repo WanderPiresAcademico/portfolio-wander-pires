@@ -1261,7 +1261,10 @@ function renderizarSobre() {
     const wrapper = document.createElement("div");
     wrapper.classList.add("sobre__paragrafo-wrapper");
     wrapper.innerHTML = `
-      <button class="sobre__btn-remover-p" data-index="${i}" title="Excluir parágrafo">&times;</button>
+      <div class="sobre__paragrafo-acoes">
+        <button class="sobre__btn-editar-p" data-index="${i}" title="Editar parágrafo">&#9998;</button>
+        <button class="sobre__btn-remover-p" data-index="${i}" title="Excluir parágrafo">&times;</button>
+      </div>
       <p>${texto}</p>
     `;
     container.appendChild(wrapper);
@@ -1274,6 +1277,19 @@ function renderizarSobre() {
   container.appendChild(btnAdd);
 
   // Eventos
+  container.querySelectorAll(".sobre__btn-editar-p").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const idx = parseInt(btn.dataset.index, 10);
+      const textoAtual = sobreParagrafos[idx].replace(/<[^>]*>/g, "");
+      const novoTexto = prompt("Editar parágrafo:", textoAtual);
+      if (novoTexto !== null && novoTexto.trim()) {
+        sobreParagrafos[idx] = novoTexto.trim();
+        salvarDados();
+        renderizarSobre();
+      }
+    });
+  });
+
   container.querySelectorAll(".sobre__btn-remover-p").forEach((btn) => {
     btn.addEventListener("click", () => {
       sobreParagrafos.splice(parseInt(btn.dataset.index, 10), 1);
