@@ -962,10 +962,17 @@ function configurarAbas() {
   const secoes = document.querySelectorAll(".secao-aba");
   const heroBtn = document.querySelector(".hero__btn");
 
+  const heroSection = document.querySelector(".hero");
+
   function ativarAba(nomeAba) {
     // Ocultar todas as seções
     secoes.forEach((s) => s.classList.remove("aba-ativa"));
     links.forEach((l) => l.classList.remove("aba-ativa"));
+
+    // Mostrar/ocultar hero apenas na aba "sobre"
+    if (heroSection) {
+      heroSection.style.display = nomeAba === "sobre" ? "" : "none";
+    }
 
     // Mostrar a seção da aba clicada
     const secaoAlvo = document.querySelector(`.secao-aba[data-aba="${nomeAba}"]`);
