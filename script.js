@@ -3,6 +3,53 @@
    JavaScript: Arrays de objetos + renderização dinâmica
    ========================================================== */
 
+// ===== SINCRONIZAÇÃO NA NUVEM (JSONBlob) =====
+const CLOUD_BLOB_ID = "019d6071-9f50-7d69-9412-9bad24840c26";
+const CLOUD_URL = `https://jsonblob.com/api/jsonBlob/${CLOUD_BLOB_ID}`;
+let _syncTimer = null;
+
+function montarDadosCompletos() {
+  return { projetos, formacoes, dadosPessoais, camposLabels, sobreParagrafos, habilidades, contatos };
+}
+
+function mostrarSyncStatus(msg, tipo) {
+  let el = document.getElementById("syncStatus");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "syncStatus";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.className = "sync-status sync-status--" + tipo;
+  el.classList.add("visivel");
+  if (tipo !== "syncing") {
+    setTimeout(() => el.classList.remove("visivel"), 3000);
+  }
+}
+
+async function sincronizarNaNuvem() {
+  try {
+    mostrarSyncStatus("☁️ Sincronizando...", "syncing");
+    const resp = await fetch(CLOUD_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(montarDadosCompletos()),
+    });
+    if (resp.ok) {
+      mostrarSyncStatus("✅ Sincronizado na nuvem!", "ok");
+    } else {
+      mostrarSyncStatus("⚠️ Erro ao sincronizar", "erro");
+    }
+  } catch (e) {
+    mostrarSyncStatus("⚠️ Sem conexão", "erro");
+  }
+}
+
+function agendarSync() {
+  clearTimeout(_syncTimer);
+  _syncTimer = setTimeout(sincronizarNaNuvem, 1500);
+}
+
 // ===== ARRAY DE OBJETOS COM OS PROJETOS =====
 let projetos = [
   {
@@ -340,7 +387,7 @@ let contatos = [
   { tipo: "link", label: "WhatsApp", valor: "(89) 9 8139 8723" },
 ];
 
-// ===== PERSISTÊNCIA COM LOCALSTORAGE =====
+// ===== PERSISTÊNCIA COM LOCALSTORAGE + NUVEM =====
 function salvarDados() {
   localStorage.setItem("portfolio_projetos", JSON.stringify(projetos));
   localStorage.setItem("portfolio_formacoes", JSON.stringify(formacoes));
@@ -349,12 +396,16 @@ function salvarDados() {
   localStorage.setItem("portfolio_sobre_paragrafos", JSON.stringify(sobreParagrafos));
   localStorage.setItem("portfolio_habilidades", JSON.stringify(habilidades));
   localStorage.setItem("portfolio_contatos", JSON.stringify(contatos));
+  // Sincronizar automaticamente com a nuvem (debounced)
+  agendarSync();
 }
 
 async function carregarDados() {
-  // 1. Buscar dados.json como fonte principal (publicado no GitHub)
+  let carregouDaNuvem = false;
+
+  // 1. Tentar carregar da nuvem (JSONBlob) — fonte principal
   try {
-    const resp = await fetch("dados.json");
+    const resp = await fetch(CLOUD_URL);
     if (resp.ok) {
       const dados = await resp.json();
       if (dados.projetos) projetos = dados.projetos;
@@ -364,12 +415,32 @@ async function carregarDados() {
       if (dados.sobreParagrafos) sobreParagrafos = dados.sobreParagrafos;
       if (dados.habilidades) habilidades = dados.habilidades;
       if (dados.contatos) contatos = dados.contatos;
+      carregouDaNuvem = true;
     }
   } catch (e) {
-    // Se falhar, usa os defaults hardcoded do script
+    // Nuvem indisponível, seguir para fallback
   }
 
-  // 2. Em modo edição, localStorage sobrescreve (preview local)
+  // 2. Fallback: dados.json local (caso a nuvem falhe)
+  if (!carregouDaNuvem) {
+    try {
+      const resp = await fetch("dados.json");
+      if (resp.ok) {
+        const dados = await resp.json();
+        if (dados.projetos) projetos = dados.projetos;
+        if (dados.formacoes) formacoes = dados.formacoes;
+        if (dados.dadosPessoais) dadosPessoais = dados.dadosPessoais;
+        if (dados.camposLabels) camposLabels = dados.camposLabels;
+        if (dados.sobreParagrafos) sobreParagrafos = dados.sobreParagrafos;
+        if (dados.habilidades) habilidades = dados.habilidades;
+        if (dados.contatos) contatos = dados.contatos;
+      }
+    } catch (e) {
+      // Usa os defaults hardcoded do script
+    }
+  }
+
+  // 3. Em modo edição local, localStorage sobrescreve (preview local)
   if (localStorage.getItem("portfolio_modo_edicao") === "true") {
     const p = localStorage.getItem("portfolio_projetos");
     const f = localStorage.getItem("portfolio_formacoes");
@@ -388,24 +459,15 @@ async function carregarDados() {
   }
 }
 
-// ===== PUBLICAR ALTERAÇÕES (baixar dados.json atualizado) =====
+// ===== PUBLICAR ALTERAÇÕES (sincronizar com a nuvem) =====
 function publicarDados() {
-  const dados = {
-    projetos,
-    formacoes,
-    dadosPessoais,
-    camposLabels,
-    sobreParagrafos,
-    habilidades,
-    contatos,
-  };
-  const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "dados.json";
-  a.click();
-  URL.revokeObjectURL(a.href);
-  alert("Arquivo dados.json baixado!\nSubstitua-o na pasta do projeto e faça push para o GitHub.");
+  sincronizarNaNuvem().then(() => {
+    alert(
+      "✅ Dados publicados na nuvem!\n\n" +
+      "O portfólio será atualizado automaticamente em todos os dispositivos.\n" +
+      "Basta acessar o link do site para ver as alterações."
+    );
+  });
 }
 
 // ===== MODO EDIÇÃO (Ctrl + Shift + E) =====
@@ -1524,6 +1586,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.ctrlKey && e.shiftKey && e.key === "E") {
       e.preventDefault();
       toggleModoEdicao();
+    }
+  });
+
+  // Auto-atualizar ao voltar para a aba (para que outros dispositivos vejam mudanças)
+  document.addEventListener("visibilitychange", async () => {
+    if (!document.hidden) {
+      try {
+        const resp = await fetch(CLOUD_URL);
+        if (resp.ok) {
+          const dados = await resp.json();
+          if (dados.projetos) projetos = dados.projetos;
+          if (dados.formacoes) formacoes = dados.formacoes;
+          if (dados.dadosPessoais) dadosPessoais = dados.dadosPessoais;
+          if (dados.camposLabels) camposLabels = dados.camposLabels;
+          if (dados.sobreParagrafos) sobreParagrafos = dados.sobreParagrafos;
+          if (dados.habilidades) habilidades = dados.habilidades;
+          if (dados.contatos) contatos = dados.contatos;
+          renderizarProjetos();
+          renderizarFormacoes();
+          renderizarDados();
+          renderizarSobre();
+          renderizarHabilidades();
+          renderizarContatos();
+        }
+      } catch (e) { /* silencioso */ }
     }
   });
 });
